@@ -1,6 +1,6 @@
-// Demo mode için geçici backend URL (yerel makine)
+// Production'da backend kullan, development'ta demo mode
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-const IS_DEMO_MODE = !API_URL.includes("localhost");
+const IS_DEMO_MODE = !import.meta.env.VITE_API_URL && API_URL.includes("localhost");
 
 console.log("API URL:", API_URL);
 console.log("Demo Mode:", IS_DEMO_MODE);
@@ -9,12 +9,12 @@ console.log("Demo Mode:", IS_DEMO_MODE);
 const DEMO_USER = {
   id: "demo-user",
   name: "Demo",
-  surname: "Kullanıcı", 
+  surname: "Kullanıcı",
   email: "demo@example.com",
   gender: "Erkek",
   weight: 70,
   height: 175,
-  age: 25
+  age: 25,
 };
 
 // Demo günlük verisi oluşturucu
@@ -26,12 +26,12 @@ const createDemoDay = (id) => ({
     araOgun1: ["Elma 50 kcal"],
     oglen: ["Pilav 200 kcal", "Tavuk 150 kcal"],
     araOgun2: ["Çay 5 kcal"],
-    aksam: ["Makarna 250 kcal", "Salata 30 kcal"]
+    aksam: ["Makarna 250 kcal", "Salata 30 kcal"],
   },
   activities: ["30 dakika yürüyüş"],
   waterIntake: 8,
   stepCount: 5000,
-  totalCalories: 935
+  totalCalories: 935,
 });
 
 // Authentication token management
@@ -66,14 +66,13 @@ export async function getDays() {
     if (storedDays) {
       return JSON.parse(storedDays);
     }
-    
+
     // İlk kez açılıyorsa demo günler oluştur
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-    const demoDays = [
-      createDemoDay(today),
-      createDemoDay(yesterday)
-    ];
+    const today = new Date().toISOString().split("T")[0];
+    const yesterday = new Date(Date.now() - 86400000)
+      .toISOString()
+      .split("T")[0];
+    const demoDays = [createDemoDay(today), createDemoDay(yesterday)];
     localStorage.setItem("demo-days", JSON.stringify(demoDays));
     return demoDays;
   }
@@ -95,7 +94,7 @@ export async function getDay(id) {
     const storedDays = localStorage.getItem("demo-days");
     if (storedDays) {
       const days = JSON.parse(storedDays);
-      return days.find(day => day.id === id) || null;
+      return days.find((day) => day.id === id) || null;
     }
     return null;
   }
@@ -148,7 +147,7 @@ export async function updateDay(id, day) {
   if (IS_DEMO_MODE) {
     // Demo mode: localStorage'da güncelle
     const storedDays = JSON.parse(localStorage.getItem("demo-days") || "[]");
-    const index = storedDays.findIndex(d => d.id === id);
+    const index = storedDays.findIndex((d) => d.id === id);
     if (index !== -1) {
       storedDays[index] = { ...day, userId: "demo-user" };
       localStorage.setItem("demo-days", JSON.stringify(storedDays));

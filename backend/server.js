@@ -11,7 +11,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://localhost:5173',
+    'https://daily-tracker-rho-hazel.vercel.app',
+    /https:\/\/.*\.vercel\.app$/
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // MongoDB Connection
@@ -30,7 +40,16 @@ app.get("/", (req, res) => {
     message: "Daily Tracker API is running!",
     version: "1.0.0",
     timestamp: new Date().toISOString(),
-    database: "MongoDB Local",
+    environment: process.env.NODE_ENV || "development",
+    database: mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
+  });
+});
+
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "healthy",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
   });
 });
 
