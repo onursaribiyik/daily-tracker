@@ -1,73 +1,40 @@
-// Production'da backend kullan, development'ta demo mode
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-const IS_DEMO_MODE = !import.meta.env.VITE_API_URL && API_URL.includes("localhost");
+import { DEMO_USER } from "../utils/constants";
+import { createDemoDay } from "../utils/helpers";
 
-console.log("API URL:", API_URL);
-console.log("Demo Mode:", IS_DEMO_MODE);
-
-// Demo kullanıcı verisi
-const DEMO_USER = {
-  id: "demo-user",
-  name: "Demo",
-  surname: "Kullanıcı",
-  email: "demo@example.com",
-  gender: "Erkek",
-  weight: 70,
-  height: 175,
-  age: 25,
-};
-
-// Demo günlük verisi oluşturucu
-const createDemoDay = (id) => ({
-  id,
-  userId: "demo-user",
-  meals: {
-    sabah: ["Ekmek 150 kcal", "Peynir 100 kcal"],
-    araOgun1: ["Elma 50 kcal"],
-    oglen: ["Pilav 200 kcal", "Tavuk 150 kcal"],
-    araOgun2: ["Çay 5 kcal"],
-    aksam: ["Makarna 250 kcal", "Salata 30 kcal"],
-  },
-  activities: ["30 dakika yürüyüş"],
-  waterIntake: 8,
-  stepCount: 5000,
-  totalCalories: 935,
-});
-
-// Authentication token management
+const API_URL = import.meta.env.VITE_API_URL;
+const IS_DEMO_MODE = API_URL.includes("localhost");
 let authToken = localStorage.getItem("authToken");
 
-export function setAuthToken(token) {
+console.log("IS_DEMO_MODE:", IS_DEMO_MODE);
+
+export const setAuthToken = (token) => {
   authToken = token;
   if (token) {
     localStorage.setItem("authToken", token);
   } else {
     localStorage.removeItem("authToken");
   }
-}
+};
 
-export function getAuthToken() {
+export const getAuthToken = () => {
   return authToken;
-}
+};
 
-// Helper function to add auth headers
-function getAuthHeaders() {
+const getAuthHeaders = () => {
   const headers = { "Content-Type": "application/json" };
   if (authToken) {
     headers.Authorization = `Bearer ${authToken}`;
   }
   return headers;
-}
+};
 
-export async function getDays() {
+export const getDays = async () => {
   if (IS_DEMO_MODE) {
-    // Demo mode: localStorage'dan günleri al
     const storedDays = localStorage.getItem("demo-days");
     if (storedDays) {
       return JSON.parse(storedDays);
     }
 
-    // İlk kez açılıyorsa demo günler oluştur
     const today = new Date().toISOString().split("T")[0];
     const yesterday = new Date(Date.now() - 86400000)
       .toISOString()
@@ -87,9 +54,9 @@ export async function getDays() {
   }
 
   return r.json();
-}
+};
 
-export async function getDay(id) {
+export const getDay = async (id) => {
   if (IS_DEMO_MODE) {
     const storedDays = localStorage.getItem("demo-days");
     if (storedDays) {
@@ -117,11 +84,10 @@ export async function getDay(id) {
     }
     throw error;
   }
-}
+};
 
-export async function createDay(day) {
+export const createDay = async (day) => {
   if (IS_DEMO_MODE) {
-    // Demo mode: localStorage'a gün ekle
     const storedDays = JSON.parse(localStorage.getItem("demo-days") || "[]");
     const newDay = { ...day, userId: "demo-user" };
     storedDays.push(newDay);
@@ -141,11 +107,10 @@ export async function createDay(day) {
   }
 
   return r.json();
-}
+};
 
-export async function updateDay(id, day) {
+export const updateDay = async (id, day) => {
   if (IS_DEMO_MODE) {
-    // Demo mode: localStorage'da güncelle
     const storedDays = JSON.parse(localStorage.getItem("demo-days") || "[]");
     const index = storedDays.findIndex((d) => d.id === id);
     if (index !== -1) {
@@ -168,30 +133,23 @@ export async function updateDay(id, day) {
   }
 
   return r.json();
-}
+};
 
-// Upsert helper: create if not exists, otherwise update
-export async function upsertDay(day) {
+export const upsertDay = async (day) => {
   try {
     const existing = await getDay(day.id);
     if (!existing) {
-      console.log("Day doesn't exist, creating:", day.id);
       return createDay(day);
     }
-    console.log("Day exists, updating:", day.id);
     return updateDay(day.id, day);
   } catch (error) {
     console.error("Error in upsertDay:", error);
-    // Hata durumunda da create'i dene
-    console.log("Trying to create due to error:", day.id);
     return createDay(day);
   }
-}
+};
 
-// Authentication functions
-export async function registerUser(userData) {
+export const registerUser = async (userData) => {
   if (IS_DEMO_MODE) {
-    // Demo mode: localStorage'a kullanıcı kaydet
     const demoUser = { ...DEMO_USER, ...userData, id: "demo-user" };
     localStorage.setItem("demo-user", JSON.stringify(demoUser));
     setAuthToken("demo-token");
@@ -213,11 +171,10 @@ export async function registerUser(userData) {
     setAuthToken(data.token);
   }
   return data;
-}
+};
 
-export async function loginUser(username, password) {
+export const loginUser = async (username, password) => {
   if (IS_DEMO_MODE) {
-    // Demo mode: her zaman başarılı login
     const demoUser = JSON.parse(localStorage.getItem("demo-user")) || DEMO_USER;
     setAuthToken("demo-token");
     return { user: demoUser, token: "demo-token" };
@@ -239,16 +196,14 @@ export async function loginUser(username, password) {
     setAuthToken(data.token);
   }
   return data;
-}
+};
 
-export async function logoutUser() {
+export const logoutUser = async () => {
   setAuthToken(null);
-}
+};
 
-// User profile functions
-export async function getUserProfile() {
+export const getUserProfile = async () => {
   if (IS_DEMO_MODE) {
-    // Demo mode: localStorage'dan kullanıcı al
     const demoUser = JSON.parse(localStorage.getItem("demo-user")) || DEMO_USER;
     return demoUser;
   }
@@ -258,15 +213,14 @@ export async function getUserProfile() {
   });
   if (r.status === 401) return null;
   return r.json();
-}
+};
 
-export async function checkUsernameExists(username) {
+export const checkUsernameExists = async (username) => {
   return false;
-}
+};
 
-export async function updateUser(userData) {
+export const updateUser = async (userData) => {
   if (IS_DEMO_MODE) {
-    // Demo mode: localStorage'da kullanıcı güncelle
     const updatedUser = { ...userData, id: "demo-user" };
     localStorage.setItem("demo-user", JSON.stringify(updatedUser));
     return { user: updatedUser };
@@ -284,4 +238,4 @@ export async function updateUser(userData) {
   }
 
   return r.json();
-}
+};

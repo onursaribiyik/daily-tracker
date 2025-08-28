@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-export default function Recipes() {
+const Recipes = () => {
   const { t } = useTranslation();
 
   const handleExternalLink = () => {
@@ -49,4 +49,5 @@ export default function Recipes() {
       </div>
     </div>
   );
-}
+};
+export default Recipes;

@@ -1,20 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-export default function FoodColumn({
-  title,
-  items,
-  onChange,
-  readOnly = false,
-}) {
+const FoodColumn = ({ title, items, onChange, readOnly = false }) => {
   const { t } = useTranslation();
-  const [input, setInput] = useState("");
-  const [editIndex, setEditIndex] = useState(-1);
-  const [editText, setEditText] = useState("");
 
-  // Otomatik kaydetme için timer referansları
+  const [input, setInput] = useState("");
+  const [editText, setEditText] = useState("");
+  const [editIndex, setEditIndex] = useState(-1);
   const addTimerRef = useRef(null);
   const editTimerRef = useRef(null);
+
   const add = () => {
     const val = input.trim();
     if (!val) return;
@@ -22,7 +17,6 @@ export default function FoodColumn({
     setInput("");
   };
 
-  // Otomatik ekleme fonksiyonu
   const autoAdd = (value) => {
     const val = value.trim();
     if (!val) return;
@@ -30,17 +24,14 @@ export default function FoodColumn({
     setInput("");
   };
 
-  // Input değiştiğinde otomatik kaydetme
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInput(value);
 
-    // Önceki timer'ı temizle
     if (addTimerRef.current) {
       clearTimeout(addTimerRef.current);
     }
 
-    // Yeni timer başlat - 1.5 saniye sonra kaydet
     if (value.trim()) {
       addTimerRef.current = setTimeout(() => {
         autoAdd(value);
@@ -67,7 +58,6 @@ export default function FoodColumn({
     setEditText("");
   };
 
-  // Otomatik düzenleme kaydetme
   const autoCommitEdit = (value) => {
     if (editIndex < 0) return;
     const next = items.slice();
@@ -75,23 +65,19 @@ export default function FoodColumn({
     onChange(next);
   };
 
-  // Düzenleme input'u değiştiğinde otomatik kaydetme
   const handleEditChange = (e) => {
     const value = e.target.value;
     setEditText(value);
 
-    // Önceki timer'ı temizle
     if (editTimerRef.current) {
       clearTimeout(editTimerRef.current);
     }
 
-    // Yeni timer başlat - 1.5 saniye sonra kaydet
     editTimerRef.current = setTimeout(() => {
       autoCommitEdit(value);
     }, 1500);
   };
 
-  // Component unmount olduğunda timer'ları temizle
   useEffect(() => {
     return () => {
       if (addTimerRef.current) clearTimeout(addTimerRef.current);
@@ -103,7 +89,6 @@ export default function FoodColumn({
     <div className="card">
       {title && <div className="meal-title">{title}</div>}
 
-      {/* Sadece readOnly değilse input ve kaydet butonunu göster */}
       {!readOnly && (
         <>
           <div className="row">
@@ -123,16 +108,13 @@ export default function FoodColumn({
 
       <ul className="list">
         {(items || []).map((txt, idx) => {
-          // Kalori bilgisini ayıkla (ör: "20kcal" veya "20 kcal")
           const kcalMatch = txt.match(/(\d+)\s*kcal/i);
           const kcalValue = kcalMatch ? kcalMatch[1] : null;
-          // Metinden kalori bilgisini sil
           const displayText = kcalValue
             ? txt.replace(/(\s*-?\d+\s*kcal)/i, "").trim()
             : txt;
           return (
             <li key={idx}>
-              {/* ReadOnly modunda düzenleme yok */}
               {!readOnly && editIndex === idx ? (
                 <input
                   className="input"
@@ -145,12 +127,10 @@ export default function FoodColumn({
                 </span>
               )}
 
-              {/* Sağda kalori badge'i */}
               {kcalValue && (
                 <span className="food-kcal-badge">{kcalValue} kcal</span>
               )}
 
-              {/* ReadOnly modunda butonları gösterme */}
               {!readOnly && (
                 <div className="row activity-controls">
                   {editIndex === idx ? (
@@ -175,10 +155,10 @@ export default function FoodColumn({
         })}
       </ul>
 
-      {/* ReadOnly modunda liste boşsa mesaj göster */}
       {readOnly && (!items || items.length === 0) && (
         <div className="food-empty-message">{t("noFood")}</div>
       )}
     </div>
   );
-}
+};
+export default FoodColumn;

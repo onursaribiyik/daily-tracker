@@ -47,15 +47,10 @@ router.get("/:dayId", authenticateToken, async (req, res) => {
 // Create new day
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    console.log("Create day request body:", req.body);
-    console.log("User ID:", req.user._id);
-
     const dayData = {
       ...req.body,
       userId: req.user._id,
     };
-
-    console.log("Day data to save:", dayData);
 
     // Check if day already exists
     const existingDay = await Day.findOne({
@@ -64,15 +59,12 @@ router.post("/", authenticateToken, async (req, res) => {
     });
 
     if (existingDay) {
-      console.log("Day already exists:", existingDay.id);
       return res.status(400).json({ message: "Day already exists" });
     }
 
     const day = new Day(dayData);
-    console.log("Created day object:", day);
 
     await day.save();
-    console.log("Day saved successfully:", day._id);
 
     res.status(201).json(day);
   } catch (error) {

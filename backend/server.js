@@ -13,12 +13,12 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 const corsOptions = {
   origin: [
-    'http://localhost:5173',
-    'https://daily-tracker-rho-hazel.vercel.app',
-    /https:\/\/.*\.vercel\.app$/
+    "http://localhost:5173",
+    "https://daily-tracker-rho-hazel.vercel.app",
+    /https:\/\/.*\.vercel\.app$/,
   ],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -41,7 +41,8 @@ app.get("/", (req, res) => {
     version: "1.0.0",
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || "development",
-    database: mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
+    database:
+      mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
   });
 });
 

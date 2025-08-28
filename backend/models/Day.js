@@ -5,7 +5,6 @@ const daySchema = new mongoose.Schema(
     id: {
       type: String,
       required: true,
-      // unique kaldırıldı çünkü farklı kullanıcılar aynı günü kullanabilir
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -84,13 +83,10 @@ const daySchema = new mongoose.Schema(
   }
 );
 
-// Index for better query performance
 daySchema.index({ userId: 1, id: -1 });
 
-// Composite unique index - aynı kullanıcı aynı günü iki kez yaratamaz
 daySchema.index({ userId: 1, id: 1 }, { unique: true });
 
-// Calculate total calories from meals
 daySchema.virtual("calculatedCalories").get(function () {
   let total = 0;
   if (this.meals) {
@@ -108,7 +104,6 @@ daySchema.virtual("calculatedCalories").get(function () {
   return total;
 });
 
-// Ensure virtual fields are serialized
 daySchema.set("toJSON", {
   virtuals: true,
 });

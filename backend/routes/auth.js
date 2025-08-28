@@ -125,25 +125,12 @@ router.get("/profile", authenticateToken, async (req, res) => {
 // Update user profile
 router.put("/profile", authenticateToken, async (req, res) => {
   try {
-    console.log("Update profile request:", req.body);
-    console.log("User ID:", req.user._id);
-
     const { name, surname, gender, weight, height, age } = req.body;
 
     const user = await User.findById(req.user._id);
     if (!user) {
-      console.log("User not found:", req.user._id);
       return res.status(404).json({ message: "User not found" });
     }
-
-    console.log("Current user data:", {
-      name: user.name,
-      surname: user.surname,
-      gender: user.gender,
-      weight: user.weight,
-      height: user.height,
-      age: user.age,
-    });
 
     // Update fields
     if (name) user.name = name;
@@ -153,17 +140,7 @@ router.put("/profile", authenticateToken, async (req, res) => {
     if (height) user.height = height;
     if (age) user.age = age;
 
-    console.log("Updated user data:", {
-      name: user.name,
-      surname: user.surname,
-      gender: user.gender,
-      weight: user.weight,
-      height: user.height,
-      age: user.age,
-    });
-
     await user.save();
-    console.log("User saved successfully");
 
     res.json({
       message: "Profile updated successfully",

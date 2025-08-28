@@ -1,0 +1,132 @@
+{
+  "translation": {
+    "GENERAL": "...",
+    "appTitle": "Daily Tracker",
+    "loading": "Loading...",
+    "today": "Today",
+    "allDays": "All Days",
+    "caloriesInfo": "Calories?",
+    "recipes": "Recipes",
+    "user": "User",
+    "save": "Save",
+    "saving": "Saving...",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "date": "Date",
+    "welcome": "Welcome, {{name}}!",
+    "footer": "Made with ❤️ – React + JSON Server",
+
+    "AUTH": "...",
+    "login": "Login",
+    "register": "Register",
+    "username": "Username",
+    "password": "Password",
+    "name": "Name",
+    "surname": "Surname",
+    "gender": "Gender",
+    "weight": "Weight (kg)",
+    "height": "Height (cm)",
+    "age": "Age",
+    "male": "Male",
+    "female": "Female",
+    "selectGender": "Select",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "fillAllFields": "Please fill all fields!",
+    "wrongCredentials": "Wrong username or password!",
+    "usernameExists": "This username already exists!",
+    "authError": "An error occurred. Please try again.",
+
+    "MEALS": "...",
+    "meals": "Meals",
+    "breakfast": "Breakfast",
+    "snack": "Snack",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "addFood": "Add food...",
+
+    "ACTIVITIES": "...",
+    "activities": {
+      "title": "Daily Activities",
+      "add": "Add",
+      "placeholder": "Add activity...",
+      "noActivity": "No activities added yet"
+    },
+    "dailyActivities": "Step Count",
+    "addActivity": "Add activity...",
+    "noActivity": "No activities added yet",
+    "stepCount": "Step Count",
+    "steps": "steps",
+    "stepsLabel": "Steps Count",
+
+    "WATER INTAKE": "...",
+    "dailyWaterIntake": "Water Intake",
+    "waterIntake": "Water Intake",
+    "waterAmount": "Water amount (ml)",
+    "waterConsumed": "💧 You drank {{amount}} ml",
+    "waterTarget": "({{percentage}}% / Daily target: 2.5L)",
+    "water": "Water Intake",
+
+    "FOODS": "...",
+    "noFood": "No food added yet",
+
+    "CALORIES": "...",
+    "totalCalories": "My Daily Total Calories Intake",
+    "caloriesAmount": "Calories amount (kcal)",
+
+    "Calories Info Page": "...",
+    "whatIsCalorie": "What is a Calorie?",
+    "calorieDefinition": "A calorie is a unit of energy that our body gets from food to meet its energy needs. 1 calorie = 4.18 joules of energy. It's the measurement of energy required for our daily activities.",
+
+    "calorieDeficit": "What is Calorie Deficit?",
+    "calorieDeficitDefinition": "Calorie deficit occurs when you burn more calories than you consume. To lose weight healthily, you need to create a daily deficit of 300-500 calories. This supports a healthy weight loss rate.",
+
+    "howManyCalories": "How Many Calories Should I Eat?",
+    "howManyCaloriesDefinition": "Your daily calorie needs vary based on age, gender, weight, height, and activity level. For an average adult, 1800-2500 calories per day is normal. Consult an expert for personalized calculations.",
+
+    "healthyTips": "Healthy Calorie Tracking Tips",
+    "tip1": "🥗 Eat plenty of fruits and vegetables (low calorie, high vitamins)",
+    "tip2": "💧 Drink at least 2.5L water daily (boosts metabolism)",
+    "tip3": "🏃‍♂️ Exercise regularly (increases calorie burn)",
+    "tip4": "😴 Get quality sleep (maintains hormone balance)",
+
+    "learnFoodCalories": "Learn Food Calories Now",
+
+    "RECIPES_PAGE": "...",
+    "healthyRecipes": "Healthy Recipes",
+    "healthyRecipesDescription": "Preparing nutritious and delicious meals is the foundation of healthy living. By using fresh ingredients and choosing low-fat cooking methods, you can both protect your health and create dishes that appeal to your taste.",
+
+    "cookingTips": "Cooking Tips",
+    "cookingTipsDescription": "Steaming, grilling, or baking with little oil reduces calories. Using plenty of spices adds flavor and boosts metabolism. Don't forget to practice portion control.",
+
+    "mealPlanning": "Meal Planning",
+    "mealPlanningDescription": "Creating weekly meal plans supports healthy eating and saves time. Prepare a shopping list before going to the market and prefer seasonal fruits and vegetables.",
+
+    "recipeTips": "Recipe Tips",
+    "recipeTip1": "🍳 Choose low-fat cooking methods",
+    "recipeTip2": "🌿 Use fresh spices and herbs",
+    "recipeTip3": "🥕 Prefer seasonal vegetables",
+    "recipeTip4": "⚖️ Pay attention to portion control",
+
+    "discoverRecipes": "Discover Delicious Recipes",
+
+    "USER_PROFILE": "...",
+    "userProfile": "User Profile",
+    "logout": "Logout",
+    "personalInfo": "Personal Information",
+    "physicalInfo": "Physical Information",
+    "fullName": "Full Name:",
+    "bmi": "BMI:",
+    "underweight": "Underweight",
+    "normal": "Normal",
+    "overweight": "Overweight",
+    "obese": "Obese",
+
+    "PAGINATION": "...",
+    "showing": "Showing",
+    "days": "days",
+    "previous": "Previous",
+    "next": "Next"
+  }
+}

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { loginUser, registerUser, checkUsernameExists } from "../api";
+import { loginUser, registerUser } from "../services/api";
 
-export default function AuthForm({ onAuth }) {
-  const [isLogin, setIsLogin] = useState(true);
+const AuthForm = ({ onAuth }) => {
+  const { t } = useTranslation();
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { t } = useTranslation();
+  const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -24,7 +25,6 @@ export default function AuthForm({ onAuth }) {
 
     try {
       if (isLogin) {
-        // Giriş yapmaya çalış
         const result = await loginUser(formData.username, formData.password);
 
         if (result.user) {
@@ -34,7 +34,6 @@ export default function AuthForm({ onAuth }) {
           alert(result.message);
         }
       } else {
-        // Kayıt ol
         if (
           !formData.username ||
           !formData.password ||
@@ -49,14 +48,6 @@ export default function AuthForm({ onAuth }) {
           return;
         }
 
-        // Kullanıcı adı kontrolü backend'de yapılacak
-        // const usernameExists = await checkUsernameExists(formData.username);
-        // if (usernameExists) {
-        //   alert(t("usernameExists"));
-        //   return;
-        // }
-
-        // Yeni kullanıcı oluştur
         const newUser = {
           username: formData.username,
           password: formData.password,
@@ -80,7 +71,6 @@ export default function AuthForm({ onAuth }) {
       console.error("Auth error:", error);
       let errorMessage = t("authError");
 
-      // Backend'ten gelen hata mesajını göster
       if (
         error.response &&
         error.response.data &&
@@ -256,4 +246,5 @@ export default function AuthForm({ onAuth }) {
       </div>
     </div>
   );
-}
+};
+export default AuthForm;
