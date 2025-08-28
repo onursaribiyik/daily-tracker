@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import FoodColumn from "./FoodColumn";
 import ActivitySection from "./ActivitySection";
 
-// Tüm öğünlerdeki yiyeceklerden kalori toplamı hesapla
 function getTotalCaloriesFromMeals(meals) {
   let total = 0;
   Object.values(meals).forEach((arr) => {
@@ -15,7 +14,6 @@ function getTotalCaloriesFromMeals(meals) {
   return total;
 }
 
-// Belirli bir öğündeki kalorileri hesapla
 function getMealCalories(mealItems) {
   let total = 0;
   (mealItems || []).forEach((txt) => {
@@ -25,27 +23,41 @@ function getMealCalories(mealItems) {
   return total;
 }
 
-export default function DayView({
-  day,
-  onSave,
-  compact = false,
-  readOnly = false,
-}) {
+const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
   const { t } = useTranslation();
   const [data, setData] = useState(day);
   const [saving, setSaving] = useState(false);
-  const [openMeal, setOpenMeal] = useState(null); // Hangi yemek kartının açık olduğunu tutar
+  const [openMeal, setOpenMeal] = useState(null);
+
+  const title = new Date(data.id + "T00:00:00").toLocaleDateString("tr-TR");
+  const mealCaloriesFromMeals = getTotalCaloriesFromMeals(data.meals);
+  const showSaveButton = !compact && !readOnly;
+  const mealTitles = {
+    sabah: `🌅 ${t("breakfast")} (${getMealCalories(data.meals?.sabah)} kcal)`,
+    araOgun1: `🍎 ${t("snack")} 1 (${getMealCalories(
+      data.meals?.araOgun1
+    )} kcal)`,
+    oglen: `🌞 ${t("lunch")} (${getMealCalories(data.meals?.oglen)} kcal)`,
+    araOgun2: `🍪 ${t("snack")} 2 (${getMealCalories(
+      data.meals?.araOgun2
+    )} kcal)`,
+    aksam: `🌙 ${t("dinner")} (${getMealCalories(data.meals?.aksam)} kcal)`,
+  };
+
   useEffect(() => setData(day), [day]);
 
   const setMeal = (key, items) => {
     setData((prev) => ({ ...prev, meals: { ...prev.meals, [key]: items } }));
   };
+
   const setActivities = (items) => {
     setData((prev) => ({ ...prev, activities: items }));
   };
+
   const setWaterIntake = (amount) => {
     setData((prev) => ({ ...prev, waterIntake: parseInt(amount) || 0 }));
   };
+
   const setStepCount = (count) => {
     setData((prev) => ({ ...prev, stepCount: parseInt(count) || 0 }));
   };
@@ -60,24 +72,6 @@ export default function DayView({
     setSaving(false);
   };
 
-  const title = new Date(data.id + "T00:00:00").toLocaleDateString("tr-TR");
-
-  const mealTitles = {
-    sabah: `🌅 ${t("breakfast")} (${getMealCalories(data.meals?.sabah)} kcal)`,
-    araOgun1: `🍎 ${t("snack")} 1 (${getMealCalories(
-      data.meals?.araOgun1
-    )} kcal)`,
-    oglen: `🌞 ${t("lunch")} (${getMealCalories(data.meals?.oglen)} kcal)`,
-    araOgun2: `🍪 ${t("snack")} 2 (${getMealCalories(
-      data.meals?.araOgun2
-    )} kcal)`,
-    aksam: `🌙 ${t("dinner")} (${getMealCalories(data.meals?.aksam)} kcal)`,
-  };
-
-  const mealCaloriesFromMeals = getTotalCaloriesFromMeals(data.meals);
-  const showSaveButton = !compact && !readOnly;
-
-  // Compact view için
   if (compact) {
     return (
       <div>
@@ -125,10 +119,8 @@ export default function DayView({
     );
   }
 
-  // Normal view
   return (
     <div>
-      {/* Header */}
       <div className="card">
         <div className="row header-content">
           <div>
@@ -145,7 +137,6 @@ export default function DayView({
         </div>
       </div>
 
-      {/* Meals Accordion */}
       <div className="meals-accordion">
         {Object.entries(mealTitles).map(([key, title]) => (
           <div key={key} className="card meal-card">
@@ -167,7 +158,6 @@ export default function DayView({
         ))}
       </div>
 
-      {/* Activities */}
       <ActivitySection
         items={data.activities || []}
         onChange={setActivities}
@@ -179,4 +169,5 @@ export default function DayView({
       />
     </div>
   );
-}
+};
+export default DayView;

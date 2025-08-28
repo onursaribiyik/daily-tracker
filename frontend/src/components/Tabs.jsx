@@ -1,10 +1,10 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-export default function Tabs() {
+const Tabs = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useTranslation();
 
   const tabs = [
     { key: "today", label: t("today"), path: "/today" },
@@ -34,4 +34,5 @@ export default function Tabs() {
       ))}
     </div>
   );
-}
+};
+export default Tabs;

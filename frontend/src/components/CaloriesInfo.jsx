@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-export default function CaloriesInfo() {
+const CaloriesInfo = () => {
   const { t } = useTranslation();
 
   const handleExternalLink = () => {
@@ -49,4 +49,5 @@ export default function CaloriesInfo() {
       </div>
     </div>
   );
-}
+};
+export default CaloriesInfo;

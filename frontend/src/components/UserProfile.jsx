@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { updateUser } from "../api";
+import { updateUser } from "../services/api";
 
-export default function UserProfile({ user, onUpdate, onLogout }) {
+const UserProfile = ({ user, onUpdate, onLogout }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
@@ -18,7 +18,6 @@ export default function UserProfile({ user, onUpdate, onLogout }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log("USERPROFİLE");
 
     if (
       !formData.name ||
@@ -233,4 +232,5 @@ export default function UserProfile({ user, onUpdate, onLogout }) {
       )}
     </div>
   );
-}
+};
+export default UserProfile;

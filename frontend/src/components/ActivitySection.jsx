@@ -1,14 +1,12 @@
 import { useTranslation } from "react-i18next";
 
-export default function ActivitySection({
-  items,
-  onChange,
+const ActivitySection = ({
   waterIntake,
   onWaterChange,
   stepCount,
   onStepChange,
   readOnly = false,
-}) {
+}) => {
   const { t } = useTranslation();
 
   return (
@@ -17,14 +15,12 @@ export default function ActivitySection({
         {t("stepCount")} / {t("dailyWaterIntake")}
       </div>
 
-      {/* Su Tüketimi Progress Bar */}
       <div className="water-section">
         <div className="water-header">
           <label className="water-label">{t("water")}</label>
           <span className="water-amount">{waterIntake || 0} ml / 3500 ml</span>
         </div>
 
-        {/* Progress Bar */}
         <div className="water-progress-bar">
           <div
             className="water-progress-fill"
@@ -61,7 +57,6 @@ export default function ActivitySection({
         </div>
       </div>
 
-      {/* Adım Sayacı Progress Bar */}
       <div className="step-section">
         <div className="step-header">
           <label className="step-label">{t("stepsLabel")}</label>
@@ -70,7 +65,6 @@ export default function ActivitySection({
           </span>
         </div>
 
-        {/* Progress Bar */}
         <div className="step-progress-bar">
           <div
             className="step-progress-fill"
@@ -110,4 +104,5 @@ export default function ActivitySection({
       </div>
     </div>
   );
-}
+};
+export default ActivitySection;

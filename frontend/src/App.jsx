@@ -7,74 +7,40 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { emptyDay, getTotalCaloriesFromMeals, isoToday } from "./utils/helpers";
+
+import {
+  getDays,
+  upsertDay,
+  setAuthToken,
+  getUserProfile,
+} from "./services/api";
+
 import Tabs from "./components/Tabs";
+import Recipes from "./components/Recipes";
 import DayView from "./components/DayView";
 import AuthForm from "./components/AuthForm";
 import UserProfile from "./components/UserProfile";
 import CaloriesInfo from "./components/CaloriesInfo";
-import Recipes from "./components/Recipes";
 import LanguageSwitcher from "./components/LanguageSwitcher";
-import {
-  getDays,
-  getDay,
-  createDay,
-  updateDay,
-  upsertDay,
-  setAuthToken,
-  getUserProfile,
-} from "./api";
 
-function getTotalCaloriesFromMeals(meals) {
-  let total = 0;
-  if (!meals) return 0;
-  Object.values(meals).forEach((arr) => {
-    (arr || []).forEach((txt) => {
-      const kcalMatch = txt.match(/(\d+)\s*kcal/i);
-      if (kcalMatch) total += parseInt(kcalMatch[1], 10);
-    });
-  });
-  return total;
-}
+const MainApp = () => {
+  const { t } = useTranslation();
+  const authCheckRef = useRef(false);
 
-function isoToday() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  const today = `${year}-${month}-${day}`;
-  return today;
-}
-
-const emptyDay = (id) => ({
-  id,
-  meals: {
-    sabah: [],
-    araOgun1: [],
-    oglen: [],
-    araOgun2: [],
-    aksam: [],
-  },
-  activities: [],
-  waterIntake: 0, // Günlük su içme miktarı (ml)
-  stepCount: 0, // Günlük adım sayısı
-  totalCalories: 0, // Günlük toplam kalori miktarı (kcal)
-});
-
-function MainApp() {
+  const [itemsPerPage] = useState(10);
   const [days, setDays] = useState([]);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Loading state eklendi
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
   const [todayId, setTodayId] = useState(isoToday());
   const [expandedDays, setExpandedDays] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+
+  const today = days.find((d) => d.id === todayId);
   const location = useLocation();
-  const { t } = useTranslation();
-  const authCheckRef = useRef(false); // Tekrarlı auth check'i önlemek için
 
   useEffect(() => {
     const checkStoredAuth = async () => {
-      // Eğer auth check zaten yapıldıysa, tekrar yapma
       if (authCheckRef.current) {
         return;
       }
@@ -86,15 +52,11 @@ function MainApp() {
       if (authToken) {
         setAuthToken(authToken);
         try {
-          console.log("Auth check yapılıyor - getUserProfile çağrılıyor");
-          // LocalStorage'tan değil, her zaman backend'den fresh data çek
           const userProfile = await getUserProfile();
           if (userProfile) {
             setUser(userProfile);
-            // Fresh data ile localStorage'ı güncelle
             localStorage.setItem("currentUser", JSON.stringify(userProfile));
           } else {
-            // Token geçersiz, temizle
             handleLogout();
           }
         } catch (error) {
@@ -102,7 +64,7 @@ function MainApp() {
           handleLogout();
         }
       }
-      setLoading(false); // Loading state burada false yapılıyor
+      setLoading(false);
     };
 
     checkStoredAuth();
@@ -116,31 +78,28 @@ function MainApp() {
       }
     };
 
-    // İlk başta hemen kontrol et
     checkDate();
 
-    // Her dakika kontrol et
     const interval = setInterval(checkDate, 60000);
 
     return () => clearInterval(interval);
   }, [todayId]);
 
-  async function bootstrap() {
+  useEffect(() => {
+    if (user) {
+      bootstrap();
+    }
+  }, [user, todayId]);
+
+  const bootstrap = async () => {
     try {
-      console.log("Bootstrap called with todayId:", todayId);
       const all = await getDays();
       const allDays = Array.isArray(all) ? all : [];
-      console.log("Loaded days:", allDays.length);
 
       if (!allDays.find((d) => d.id === todayId)) {
-        console.log("Today's day not found, creating:", todayId);
         const newDay = emptyDay(todayId);
-        console.log("New day object:", newDay);
         const createdDay = await upsertDay(newDay);
-        console.log("Created day:", createdDay);
         allDays.push(createdDay);
-      } else {
-        console.log("Today's day already exists:", todayId);
       }
       allDays.sort((a, b) => b.id.localeCompare(a.id));
       setDays(allDays);
@@ -148,14 +107,7 @@ function MainApp() {
       console.error("Error loading days:", error);
       setDays([]);
     }
-  }
-  useEffect(() => {
-    if (user) {
-      bootstrap();
-    }
-  }, [user, todayId]);
-
-  const today = days.find((d) => d.id === todayId);
+  };
 
   const setDayInList = (updated) => {
     setDays((prev) => {
@@ -193,10 +145,9 @@ function MainApp() {
     setAuthToken(null);
     setUser(null);
     setDays([]);
-    authCheckRef.current = false; // Ref'i resetle
+    authCheckRef.current = false;
   };
 
-  // Loading state gösterilirken hiçbir şey render edilmez
   if (loading) {
     return (
       <div className="loading-container">
@@ -215,7 +166,7 @@ function MainApp() {
       <div className="row app-header">
         <div className="title">{t("appTitle")}</div>
         <div className="row app-controls">
-          <LanguageSwitcher />
+          {location.pathname === "/user" && <LanguageSwitcher />}
           <div className="kv">
             <label>{t("welcome", { name: user.name })}</label>
             <span className="badge">{todayId}</span>
@@ -251,7 +202,6 @@ function MainApp() {
           element={
             <div className="all-days-container">
               {(() => {
-                // Pagination hesaplamaları
                 const totalItems = days.length;
                 const totalPages = Math.ceil(totalItems / itemsPerPage);
                 const startIndex = (currentPage - 1) * itemsPerPage;
@@ -260,7 +210,6 @@ function MainApp() {
 
                 return (
                   <>
-                    {/* Pagination Info */}
                     <div className="pagination-info">
                       <span className="pagination-text">
                         {t("showing")} {startIndex + 1}-
@@ -269,7 +218,6 @@ function MainApp() {
                       </span>
                     </div>
 
-                    {/* Days List */}
                     <div className="row pagination-container">
                       {currentDays.map((day) => {
                         const isExpanded = expandedDays[day.id];
@@ -282,7 +230,6 @@ function MainApp() {
                             key={day.id}
                             className={`card ${isExpanded ? "expanded" : ""}`}
                           >
-                            {/* Kart başlığı - her zaman görünür */}
                             <div
                               className="day-header"
                               onClick={() => toggleDayExpansion(day.id)}
@@ -308,7 +255,6 @@ function MainApp() {
                               </div>
                             </div>
 
-                            {/* Detaylar - sadece açıkken görünür */}
                             {isExpanded && (
                               <div className="day-content">
                                 <DayView
@@ -327,7 +273,6 @@ function MainApp() {
                       })}
                     </div>
 
-                    {/* Pagination Controls */}
                     {totalPages > 1 && (
                       <div className="pagination">
                         <button
@@ -392,16 +337,15 @@ function MainApp() {
           }
         />
       </Routes>
-
-      <footer>{t("footer")}</footer>
     </>
   );
-}
+};
 
-export default function App() {
+const App = () => {
   return (
     <Router>
       <MainApp />
     </Router>
   );
-}
+};
+export default App;

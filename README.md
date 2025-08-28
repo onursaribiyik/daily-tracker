@@ -17,7 +17,7 @@ git clone https://github.com/onursaribiyik/daily-tracker.git
 cd daily-tracker
 cd backend
 npm install
-cp .env.example .env   # .env dosyasını düzenleyin
+cp .env.example .env   # .env.example daki gibi .env oluşturun
 npm start              # Backend'i başlatın
 cd ../frontend
 npm install

@@ -1,0 +1,132 @@
+{
+  "translation": {
+    "GENERAL": "...",
+    "appTitle": "Daily Tracker",
+    "loading": "Yükleniyor...",
+    "today": "Bugün",
+    "allDays": "Tüm Günler",
+    "caloriesInfo": "Kaç Kalori?",
+    "recipes": "Yemek Tarifleri",
+    "user": "Kullanıcı",
+    "save": "Kaydet",
+    "saving": "Kaydediliyor...",
+    "edit": "Düzenle",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "date": "Tarih",
+    "welcome": "Hoş geldin, {{name}}!",
+    "footer": "Made with ❤️ – React + JSON Server",
+
+    "AUTH": "...",
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "name": "Ad",
+    "surname": "Soyad",
+    "gender": "Cinsiyet",
+    "weight": "Kilo (kg)",
+    "height": "Boy (cm)",
+    "age": "Yaş",
+    "male": "Erkek",
+    "female": "Kadın",
+    "selectGender": "Seçiniz",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Zaten hesabınız var mı?",
+    "fillAllFields": "Lütfen tüm alanları doldurun!",
+    "wrongCredentials": "Kullanıcı adı veya şifre hatalı!",
+    "usernameExists": "Bu kullanıcı adı zaten mevcut!",
+    "authError": "Bir hata oluştu. Lütfen tekrar deneyin.",
+
+    "MEALS": "...",
+    "meals": "Öğünler",
+    "breakfast": "Sabah",
+    "snack": "Ara Öğün",
+    "lunch": "Öğlen",
+    "dinner": "Akşam",
+    "addFood": "Yiyecek ekle...",
+
+    "ACTIVITIES": "...",
+    "activities": {
+      "title": "Günlük Aktiviteler",
+      "add": "Ekle",
+      "placeholder": "Aktivite ekle...",
+      "noActivity": "Henüz aktivite eklenmemiş"
+    },
+    "dailyActivities": "Adım Sayım",
+    "addActivity": "Aktivite ekle...",
+    "noActivity": "Henüz aktivite eklenmemiş",
+    "stepCount": "Adım Sayım",
+    "stepsLabel": "Adım Sayacı",
+    "steps": "adım",
+
+    "WATER INTAKE": "...",
+    "dailyWaterIntake": "Su İçme Miktarım",
+    "waterIntake": "Su Tüketimi",
+    "waterAmount": "Su miktarı (ml)",
+    "waterConsumed": "💧 {{amount}} ml içtin",
+    "waterTarget": "({{percentage}}% / Günlük hedef: 2.5L)",
+    "water": "Su Tüketimi",
+
+    "FOODS": "...",
+    "noFood": "Henüz yiyecek eklenmemiş",
+
+    "CALORIES": "...",
+    "totalCalories": "Günlük Aldığım Toplam Kalori",
+    "caloriesAmount": "Kalori miktarı (kcal)",
+
+    "CALORIES_INFO_PAGE": "...",
+    "whatIsCalorie": "Kalori Nedir?",
+    "calorieDefinition": "Kalori, vücudumuzun enerji ihtiyacını karşılamak için besinlerden aldığı enerji birimidir. 1 kalori = 4.18 joule enerji demektir. Günlük aktivitelerimiz için gereken enerjinin ölçümüdür.",
+
+    "calorieDeficit": "Kalori Açığı Nedir?",
+    "calorieDeficitDefinition": "Kalori açığı, aldığınız kaloriden daha fazla kalori yakmanız durumudur. Kilo vermek için günlük 300-500 kalori açığı oluşturmanız gerekir. Bu sağlıklı kilo verme hızını destekler.",
+
+    "howManyCalories": "Kaç Kalori Almalıyım?",
+    "howManyCaloriesDefinition": "Günlük kalori ihtiyacınız yaş, cinsiyet, kilo, boy ve aktivite seviyenize göre değişir. Ortalama bir yetişkin için günde 1800-2500 kalori arası normaldir. Kişiselleştirilmiş hesaplama için uzman desteği alın.",
+
+    "healthyTips": "Sağlıklı Kalori Takibi İpuçları",
+    "tip1": "🥗 Sebze ve meyveleri bol tüketin (düşük kalori, yüksek vitamin)",
+    "tip2": "💧 Günde en az 2.5L su için (metabolizmayı hızlandırır)",
+    "tip3": "🏃‍♂️ Düzenli egzersiz yapın (kalori yakımını artırır)",
+    "tip4": "😴 Kaliteli uyku alın (hormon dengesini korur)",
+
+    "learnFoodCalories": "Besinler Kaç Kalori? Hemen Öğren",
+
+    "RECIPES_PAGE": "...",
+    "healthyRecipes": "Sağlıklı Tarifler",
+    "healthyRecipesDescription": "Besleyici ve lezzetli yemekler hazırlamak sağlıklı yaşamın temelidir. Taze malzemeler kullanarak, az yağlı pişirme yöntemleri tercih ederek hem sağlığınızı koruyabilir hem de damak tadınıza hitap eden yemekler yapabilirsiniz.",
+
+    "cookingTips": "Pişirme İpuçları",
+    "cookingTipsDescription": "Yemekleri buharla pişirmek, ızgara yapmak veya fırında az yağla pişirmek kaloriyi düşürür. Baharatları bol kullanmak hem lezzet katlar hem de metabolizmayı hızlandırır. Porsiyon kontrolü yapmayı unutmayın.",
+
+    "mealPlanning": "Öğün Planlaması",
+    "mealPlanningDescription": "Haftalık yemek planı yapmak hem sağlıklı beslenmenizi destekler hem de zaman tasarrufu sağlar. Market alışverişinden önce liste hazırlayın ve mevsim sebze-meyvelerini tercih edin.",
+
+    "recipeTips": "Tarif İpuçları",
+    "recipeTip1": "🍳 Az yağda pişirme yöntemlerini tercih edin",
+    "recipeTip2": "🌿 Taze baharat ve otlar kullanın",
+    "recipeTip3": "🥕 Mevsim sebzelerini tercih edin",
+    "recipeTip4": "⚖️ Porsiyon kontrolü yapmaya dikkat edin",
+
+    "discoverRecipes": "Nefis Tarifleri Keşfet",
+
+    "USER_PROFILE": "...",
+    "userProfile": "Kullanıcı Profili",
+    "logout": "Çıkış Yap",
+    "personalInfo": "Kişisel Bilgiler",
+    "physicalInfo": "Fiziksel Bilgiler",
+    "fullName": "Ad Soyad:",
+    "bmi": "BMI:",
+    "underweight": "Zayıf",
+    "normal": "Normal",
+    "overweight": "Fazla Kilolu",
+    "obese": "Obez",
+
+    "PAGINATION": "...",
+    "showing": "Gösteriliyor",
+    "days": "gün",
+    "previous": "Önceki",
+    "next": "Sonraki"
+  }
+}
