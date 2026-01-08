@@ -239,3 +239,23 @@ export const updateUser = async (userData) => {
 
   return r.json();
 };
+
+export const changePassword = async (oldPassword, newPassword) => {
+  if (IS_DEMO_MODE) {
+    // Demo modunda şifre değiştirmeyi simüle et
+    return { message: "Password changed successfully" };
+  }
+
+  const r = await fetch(`${API_URL}/auth/change-password`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ oldPassword, newPassword }),
+  });
+
+  if (!r.ok) {
+    const errorData = await r.json();
+    throw new Error(errorData.message || "Change password failed");
+  }
+
+  return r.json();
+};
