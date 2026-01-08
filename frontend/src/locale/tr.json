@@ -37,6 +37,20 @@
     "wrongCredentials": "Kullanıcı adı veya şifre hatalı!",
     "usernameExists": "Bu kullanıcı adı zaten mevcut!",
     "authError": "Bir hata oluştu. Lütfen tekrar deneyin.",
+    "changePassword": "Şifre Değiştir",
+    "oldPassword": "Eski Şifre",
+    "newPassword": "Yeni Şifre",
+    "confirmNewPassword": "Yeni Şifre Tekrar",
+    "enterOldPassword": "Eski şifrenizi girin",
+    "enterNewPassword": "Yeni şifrenizi girin",
+    "confirmPasswordPlaceholder": "Yeni şifrenizi tekrar girin",
+    "changePasswordButton": "Şifreyi Değiştir",
+    "changing": "Değiştiriliyor...",
+    "passwordsDoNotMatch": "Şifreler eşleşmiyor!",
+    "passwordTooShort": "Şifre en az 6 karakter olmalıdır!",
+    "newPasswordSameAsOld": "Yeni şifre eski şifreden farklı olmalıdır!",
+    "passwordChangedSuccess": "Şifre başarıyla değiştirildi! Çıkış yapılıyor...",
+    "oldPasswordIncorrect": "Eski şifre yanlış!",
 
     "MEALS": "...",
     "meals": "Öğünler",
@@ -45,6 +59,7 @@
     "lunch": "Öğlen",
     "dinner": "Akşam",
     "addFood": "Yiyecek ekle...",
+    "calories": "Kalori",
 
     "ACTIVITIES": "...",
     "activities": {
@@ -122,6 +137,7 @@
     "normal": "Normal",
     "overweight": "Fazla Kilolu",
     "obese": "Obez",
+    "language": "Dil",
 
     "PAGINATION": "...",
     "showing": "Gösteriliyor",

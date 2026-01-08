@@ -162,6 +162,39 @@ router.put("/profile", authenticateToken, async (req, res) => {
   }
 });
 
+// Change password
+router.post("/change-password", authenticateToken, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Please provide old and new password" });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Verify old password
+    const isPasswordValid = await user.comparePassword(oldPassword);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Old password is incorrect" });
+    }
+
+    // Update password
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.error("Change password error:", error);
+    res.status(500).json({ message: "Server error during password change" });
+  }
+});
+
 // Legacy endpoints for compatibility
 router.get("/", async (req, res) => {
   try {
