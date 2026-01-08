@@ -4,29 +4,41 @@ import { useTranslation } from "react-i18next";
 const FoodColumn = ({ title, items, onChange, readOnly = false }) => {
   const { t } = useTranslation();
 
-  const [input, setInput] = useState("");
+  const [foodName, setFoodName] = useState("");
+  const [calories, setCalories] = useState("");
   const [editText, setEditText] = useState("");
+  const [editCalories, setEditCalories] = useState("");
   const [editIndex, setEditIndex] = useState(-1);
   const addTimerRef = useRef(null);
   const editTimerRef = useRef(null);
 
   const add = () => {
-    const val = input.trim();
-    if (!val) return;
-    onChange([...(items || []), val]);
-    setInput("");
+    const name = foodName.trim();
+    if (!name) return;
+    
+    const cal = calories.trim();
+    const foodEntry = cal ? `${name} ${cal}kcal` : name;
+    
+    onChange([...(items || []), foodEntry]);
+    setFoodName("");
+    setCalories("");
   };
 
-  const autoAdd = (value) => {
-    const val = value.trim();
-    if (!val) return;
-    onChange([...(items || []), val]);
-    setInput("");
+  const autoAdd = (name, cal) => {
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+    
+    const trimmedCal = cal.trim();
+    const foodEntry = trimmedCal ? `${trimmedName} ${trimmedCal}kcal` : trimmedName;
+    
+    onChange([...(items || []), foodEntry]);
+    setFoodName("");
+    setCalories("");
   };
 
-  const handleInputChange = (e) => {
+  const handleFoodNameChange = (e) => {
     const value = e.target.value;
-    setInput(value);
+    setFoodName(value);
 
     if (addTimerRef.current) {
       clearTimeout(addTimerRef.current);
@@ -34,7 +46,22 @@ const FoodColumn = ({ title, items, onChange, readOnly = false }) => {
 
     if (value.trim()) {
       addTimerRef.current = setTimeout(() => {
-        autoAdd(value);
+        autoAdd(value, calories);
+      }, 1500);
+    }
+  };
+
+  const handleCaloriesChange = (e) => {
+    const value = e.target.value;
+    setCalories(value);
+
+    if (addTimerRef.current) {
+      clearTimeout(addTimerRef.current);
+    }
+
+    if (foodName.trim()) {
+      addTimerRef.current = setTimeout(() => {
+        autoAdd(foodName, value);
       }, 1500);
     }
   };
@@ -46,26 +73,50 @@ const FoodColumn = ({ title, items, onChange, readOnly = false }) => {
 
   const startEdit = (idx) => {
     setEditIndex(idx);
-    setEditText(items[idx]);
+    const item = items[idx];
+    const kcalMatch = item.match(/(\d+)\s*kcal/i);
+    
+    if (kcalMatch) {
+      const kcalValue = kcalMatch[1];
+      const name = item.replace(/(\s*-?\d+\s*kcal)/i, "").trim();
+      setEditText(name);
+      setEditCalories(kcalValue);
+    } else {
+      setEditText(item);
+      setEditCalories("");
+    }
   };
 
   const commitEdit = () => {
     if (editIndex < 0) return;
+    const name = editText.trim();
+    if (!name) return;
+    
+    const cal = editCalories.trim();
+    const foodEntry = cal ? `${name} ${cal}kcal` : name;
+    
     const next = items.slice();
-    next[editIndex] = editText.trim() || next[editIndex];
+    next[editIndex] = foodEntry;
     onChange(next);
     setEditIndex(-1);
     setEditText("");
+    setEditCalories("");
   };
 
-  const autoCommitEdit = (value) => {
+  const autoCommitEdit = (name, cal) => {
     if (editIndex < 0) return;
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+    
+    const trimmedCal = cal.trim();
+    const foodEntry = trimmedCal ? `${trimmedName} ${trimmedCal}kcal` : trimmedName;
+    
     const next = items.slice();
-    next[editIndex] = value.trim() || next[editIndex];
+    next[editIndex] = foodEntry;
     onChange(next);
   };
 
-  const handleEditChange = (e) => {
+  const handleEditNameChange = (e) => {
     const value = e.target.value;
     setEditText(value);
 
@@ -74,7 +125,20 @@ const FoodColumn = ({ title, items, onChange, readOnly = false }) => {
     }
 
     editTimerRef.current = setTimeout(() => {
-      autoCommitEdit(value);
+      autoCommitEdit(value, editCalories);
+    }, 1500);
+  };
+
+  const handleEditCaloriesChange = (e) => {
+    const value = e.target.value;
+    setEditCalories(value);
+
+    if (editTimerRef.current) {
+      clearTimeout(editTimerRef.current);
+    }
+
+    editTimerRef.current = setTimeout(() => {
+      autoCommitEdit(editText, value);
     }, 1500);
   };
 
@@ -95,8 +159,17 @@ const FoodColumn = ({ title, items, onChange, readOnly = false }) => {
             <input
               className="input"
               placeholder={t("addFood")}
-              value={input}
-              onChange={handleInputChange}
+              value={foodName}
+              onChange={handleFoodNameChange}
+              style={{ flex: 2 }}
+            />
+            <input
+              className="input"
+              placeholder={t("calories") || "Kalori"}
+              value={calories}
+              onChange={handleCaloriesChange}
+              type="number"
+              style={{ flex: 1 }}
             />
             <button className="button" onClick={add}>
               {t("save")}
@@ -116,18 +189,33 @@ const FoodColumn = ({ title, items, onChange, readOnly = false }) => {
           return (
             <li key={idx}>
               {!readOnly && editIndex === idx ? (
-                <input
-                  className="input"
-                  value={editText}
-                  onChange={handleEditChange}
-                />
+                <div className="row" style={{ flex: 1 }}>
+                  <input
+                    className="input"
+                    placeholder={t("addFood")}
+                    value={editText}
+                    onChange={handleEditNameChange}
+                    style={{ flex: 2 }}
+                  />
+                  <input
+                    className="input"
+                    placeholder={t("calories") || "Kalori"}
+                    value={editCalories}
+                    onChange={handleEditCaloriesChange}
+                    type="number"
+                    style={{ flex: 1 }}
+                  />
+                </div>
               ) : (
                 <span title={displayText} className="food-text-ellipsis">
                   {displayText}
                 </span>
               )}
 
-              {kcalValue && (
+              {kcalValue && !readOnly && editIndex !== idx && (
+                <span className="food-kcal-badge">{kcalValue} kcal</span>
+              )}
+              {kcalValue && readOnly && (
                 <span className="food-kcal-badge">{kcalValue} kcal</span>
               )}
 

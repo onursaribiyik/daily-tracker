@@ -37,6 +37,20 @@
     "wrongCredentials": "Wrong username or password!",
     "usernameExists": "This username already exists!",
     "authError": "An error occurred. Please try again.",
+    "changePassword": "Change Password",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "enterOldPassword": "Enter your old password",
+    "enterNewPassword": "Enter your new password",
+    "confirmPasswordPlaceholder": "Confirm your new password",
+    "changePasswordButton": "Change Password",
+    "changing": "Changing...",
+    "passwordsDoNotMatch": "Passwords do not match!",
+    "passwordTooShort": "Password must be at least 6 characters!",
+    "newPasswordSameAsOld": "New password must be different from old password!",
+    "passwordChangedSuccess": "Password changed successfully! Logging out...",
+    "oldPasswordIncorrect": "Old password is incorrect!",
 
     "MEALS": "...",
     "meals": "Meals",
@@ -45,6 +59,7 @@
     "lunch": "Lunch",
     "dinner": "Dinner",
     "addFood": "Add food...",
+    "calories": "Calories",
 
     "ACTIVITIES": "...",
     "activities": {
@@ -122,6 +137,7 @@
     "normal": "Normal",
     "overweight": "Overweight",
     "obese": "Obese",
+    "language": "Language",
 
     "PAGINATION": "...",
     "showing": "Showing",

@@ -97,7 +97,13 @@ const AuthForm = ({ onAuth }) => {
   return (
     <div className="auth-container">
       <div className="auth-form">
-        <h2>{isLogin ? t("login") : t("register")}</h2>
+        <div className="auth-header">
+          <div className="app-logo">
+            <img src="/daily-tracker-favicon.png" alt="Daily Tracker" />
+          </div>
+          <h1 className="app-title">Daily Tracker</h1>
+          <p className="app-subtitle">{isLogin ? t("login") : t("register")}</p>
+        </div>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">

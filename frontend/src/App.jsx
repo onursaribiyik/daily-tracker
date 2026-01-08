@@ -164,17 +164,12 @@ const MainApp = () => {
   return (
     <>
       <div className="row app-header">
-        <div className="title">{t("appTitle")}</div>
-        <div className="row app-controls">
-          {location.pathname === "/user" && <LanguageSwitcher />}
-          <div className="kv">
-            <label>{t("welcome", { name: user.name })}</label>
-            <span className="badge">{todayId}</span>
-          </div>
+        <div className="row app-header-left">
+          <img src="/daily-tracker-favicon.png" alt="Daily Tracker" className="app-header-logo" />
+          <div className="title">{t("appTitle")}</div>
         </div>
+        <Tabs />
       </div>
-
-      <Tabs />
 
       <Routes>
         <Route path="/" element={<Navigate to="/today" replace />} />

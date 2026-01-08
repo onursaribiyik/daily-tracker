@@ -8,19 +8,25 @@ const LanguageSwitcher = () => {
     localStorage.setItem("language", lng);
   };
 
+  const currentLang = i18n.language;
+
   return (
-    <div className="language-switcher">
+    <div className="language-switcher-modern">
       <button
-        className={`lang-btn ${i18n.language === "tr" ? "active" : ""}`}
+        className={`lang-option ${currentLang === "tr" ? "active" : ""}`}
         onClick={() => changeLanguage("tr")}
       >
-        TR
+        <span className="flag">🇹🇷</span>
+        <span className="lang-text">Türkçe</span>
+        {currentLang === "tr" && <span className="check-icon">✓</span>}
       </button>
       <button
-        className={`lang-btn ${i18n.language === "en" ? "active" : ""}`}
+        className={`lang-option ${currentLang === "en" ? "active" : ""}`}
         onClick={() => changeLanguage("en")}
       >
-        EN
+        <span className="flag">🇬🇧</span>
+        <span className="lang-text">English</span>
+        {currentLang === "en" && <span className="check-icon">✓</span>}
       </button>
     </div>
   );
