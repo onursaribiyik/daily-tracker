@@ -77,6 +77,48 @@ const daySchema = new mongoose.Schema(
       min: 0,
       max: 10000,
     },
+    mealPhotos: {
+      sabah: [
+        {
+          id: String,
+          url: String,
+          calories: { type: Number, default: 0 },
+          timestamp: { type: Date, default: Date.now },
+        },
+      ],
+      araOgun1: [
+        {
+          id: String,
+          url: String,
+          calories: { type: Number, default: 0 },
+          timestamp: { type: Date, default: Date.now },
+        },
+      ],
+      oglen: [
+        {
+          id: String,
+          url: String,
+          calories: { type: Number, default: 0 },
+          timestamp: { type: Date, default: Date.now },
+        },
+      ],
+      araOgun2: [
+        {
+          id: String,
+          url: String,
+          calories: { type: Number, default: 0 },
+          timestamp: { type: Date, default: Date.now },
+        },
+      ],
+      aksam: [
+        {
+          id: String,
+          url: String,
+          calories: { type: Number, default: 0 },
+          timestamp: { type: Date, default: Date.now },
+        },
+      ],
+    },
   },
   {
     timestamps: true,
