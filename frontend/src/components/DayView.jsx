@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FoodColumn from "./FoodColumn";
 import ActivitySection from "./ActivitySection";
+import ImageModal from "./ImageModal";
+import { addMealPhoto, deleteMealPhoto } from "../services/api";
 
 function getTotalCaloriesFromMeals(meals) {
   let total = 0;
@@ -28,6 +30,8 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
   const [data, setData] = useState(day);
   const [saving, setSaving] = useState(false);
   const [openMeal, setOpenMeal] = useState(null);
+  const [selectedMealForPhotos, setSelectedMealForPhotos] = useState(null);
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
   const title = new Date(data.id + "T00:00:00").toLocaleDateString("tr-TR");
   const mealCaloriesFromMeals = getTotalCaloriesFromMeals(data.meals);
@@ -72,6 +76,45 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
     setSaving(false);
   };
 
+  const openPhotoModal = (mealKey) => {
+    setSelectedMealForPhotos(mealKey);
+    setIsPhotoModalOpen(true);
+  };
+
+  const closePhotoModal = () => {
+    setIsPhotoModalOpen(false);
+    setSelectedMealForPhotos(null);
+  };
+
+  const handleAddPhoto = async (photo) => {
+    try {
+      const updatedDay = await addMealPhoto(data.id, selectedMealForPhotos, photo);
+      setData(updatedDay);
+    } catch (error) {
+      console.error("Error adding photo:", error);
+      alert(t("errorAddingPhoto"));
+    }
+  };
+
+  const handleDeletePhoto = async (photoId) => {
+    try {
+      const updatedDay = await deleteMealPhoto(data.id, selectedMealForPhotos, photoId);
+      setData(updatedDay);
+    } catch (error) {
+      console.error("Error deleting photo:", error);
+      alert(t("errorDeletingPhoto"));
+    }
+  };
+
+  const getMealPhotos = (mealKey) => {
+    return data.mealPhotos?.[mealKey] || [];
+  };
+
+  const getMealPhotoCount = (mealKey) => {
+    const photos = getMealPhotos(mealKey);
+    return photos.length;
+  };
+
   if (compact) {
     return (
       <div>
@@ -84,9 +127,20 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
                 className="compact-meal-header"
               >
                 <span className="meal-title">{title}</span>
-                <span className="meal-arrow">
-                  {openMeal === key ? "▼" : "▶"}
-                </span>
+                <div className="meal-header-actions">
+                  <button
+                    className="photo-icon-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openPhotoModal(key);
+                    }}
+                  >
+                    📷 {getMealPhotoCount(key) > 0 && `(${getMealPhotoCount(key)})`}
+                  </button>
+                  <span className="meal-arrow">
+                    {openMeal === key ? "▼" : "▶"}
+                  </span>
+                </div>
               </div>
               {openMeal === key && (
                 <div className="meal-content">
@@ -115,6 +169,17 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
         />
 
         <div className="spacing-small" />
+
+        {isPhotoModalOpen && (
+          <ImageModal
+            isOpen={isPhotoModalOpen}
+            onClose={closePhotoModal}
+            photos={getMealPhotos(selectedMealForPhotos)}
+            onAddPhoto={handleAddPhoto}
+            onDeletePhoto={handleDeletePhoto}
+            readOnly={readOnly}
+          />
+        )}
       </div>
     );
   }
@@ -142,7 +207,18 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
           <div key={key} className="card meal-card">
             <div onClick={() => toggleMeal(key)} className="meal-header">
               <span className="meal-title">{title}</span>
-              <span className="meal-arrow">{openMeal === key ? "▼" : "▶"}</span>
+              <div className="meal-header-actions">
+                <button
+                  className="photo-icon-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openPhotoModal(key);
+                  }}
+                >
+                  📷 {getMealPhotoCount(key) > 0 && `(${getMealPhotoCount(key)})`}
+                </button>
+                <span className="meal-arrow">{openMeal === key ? "▼" : "▶"}</span>
+              </div>
             </div>
             {openMeal === key && (
               <div className="meal-content">
@@ -167,6 +243,17 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
         onStepChange={setStepCount}
         readOnly={readOnly}
       />
+
+      {isPhotoModalOpen && (
+        <ImageModal
+          isOpen={isPhotoModalOpen}
+          onClose={closePhotoModal}
+          photos={getMealPhotos(selectedMealForPhotos)}
+          onAddPhoto={handleAddPhoto}
+          onDeletePhoto={handleDeletePhoto}
+          readOnly={readOnly}
+        />
+      )}
     </div>
   );
 };
