@@ -154,6 +154,11 @@
     "noPhotosYet": "No photos added yet",
     "confirmDeletePhoto": "Are you sure you want to delete this photo?",
     "errorAddingPhoto": "Error adding photo!",
-    "errorDeletingPhoto": "Error deleting photo!"
+    "errorDeletingPhoto": "Error deleting photo!",
+
+    "WEIGHT_HISTORY": "...",
+    "weightHistory": "Weight History",
+    "viewWeightHistory": "View Weight History",
+    "noWeightHistory": "No weight change records yet"
   }
 }

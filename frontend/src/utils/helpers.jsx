@@ -1,4 +1,4 @@
-export const getTotalCaloriesFromMeals = (meals) => {
+export const getTotalCaloriesFromMeals = (meals, mealPhotos) => {
   let total = 0;
   if (!meals) return 0;
   Object.values(meals).forEach((arr) => {
@@ -7,6 +7,14 @@ export const getTotalCaloriesFromMeals = (meals) => {
       if (kcalMatch) total += parseInt(kcalMatch[1], 10);
     });
   });
+  // Fotoğraflardan gelen kalorileri ekle
+  if (mealPhotos) {
+    Object.values(mealPhotos).forEach((photos) => {
+      (photos || []).forEach((photo) => {
+        total += parseInt(photo.calories) || 0;
+      });
+    });
+  }
   return total;
 };
 

@@ -240,7 +240,7 @@ const MainApp = () => {
                                 <div className="row pagination-controls">
                                   <div className="title">{dayTitle}</div>
                                   <span className="calories-summary">
-                                    🍖 {getTotalCaloriesFromMeals(day.meals)}{" "}
+                                    🍖 {getTotalCaloriesFromMeals(day.meals, day.mealPhotos)}{" "}
                                     kcal
                                   </span>
                                 </div>

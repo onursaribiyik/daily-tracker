@@ -49,6 +49,18 @@ const userSchema = new mongoose.Schema(
       min: 13,
       max: 120,
     },
+    weightHistory: [
+      {
+        weight: {
+          type: Number,
+          required: true,
+        },
+        date: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   {
     timestamps: true,
