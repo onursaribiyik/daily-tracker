@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const ImageModal = ({ isOpen, onClose, photos = [], onAddPhoto, onDeletePhoto, readOnly = false }) => {
+const ImageModal = ({
+  isOpen,
+  onClose,
+  photos = [],
+  onAddPhoto,
+  onDeletePhoto,
+  readOnly = false,
+}) => {
   const { t } = useTranslation();
   const [newPhotoUrl, setNewPhotoUrl] = useState("");
   const [newPhotoCalories, setNewPhotoCalories] = useState("");
@@ -17,7 +24,7 @@ const ImageModal = ({ isOpen, onClose, photos = [], onAddPhoto, onDeletePhoto, r
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          const canvas = document.createElement('canvas');
+          const canvas = document.createElement("canvas");
           let width = img.width;
           let height = img.height;
 
@@ -30,11 +37,11 @@ const ImageModal = ({ isOpen, onClose, photos = [], onAddPhoto, onDeletePhoto, r
           canvas.width = width;
           canvas.height = height;
 
-          const ctx = canvas.getContext('2d');
+          const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, width, height);
 
           // Convert to base64 with compression
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", quality);
           resolve(compressedDataUrl);
         };
         img.src = e.target.result;
@@ -55,6 +62,7 @@ const ImageModal = ({ isOpen, onClose, photos = [], onAddPhoto, onDeletePhoto, r
 
   const handleAddPhoto = () => {
     if (!newPhotoUrl.trim()) return;
+    if (!newPhotoCalories || parseInt(newPhotoCalories) <= 0) return;
 
     const photo = {
       id: Date.now().toString(),
@@ -74,6 +82,12 @@ const ImageModal = ({ isOpen, onClose, photos = [], onAddPhoto, onDeletePhoto, r
     if (window.confirm(t("confirmDeletePhoto"))) {
       onDeletePhoto(photoId);
     }
+  };
+
+  const clearPreview = () => {
+    setNewPhotoUrl("");
+    setPreviewUrl("");
+    setSelectedFile(null);
   };
 
   const handleCameraCapture = () => {
@@ -111,15 +125,15 @@ const ImageModal = ({ isOpen, onClose, photos = [], onAddPhoto, onDeletePhoto, r
                 <div key={photo.id} className="photo-card">
                   <img src={photo.url} alt="Meal" className="photo-image" />
                   <div className="photo-info">
-                    <span className="photo-calories">{photo.calories} kcal</span>
-                    {!readOnly && (
-                      <button
-                        className="photo-delete-btn"
-                        onClick={() => handleDelete(photo.id)}
-                      >
-                        🗑️
-                      </button>
-                    )}
+                    <span className="photo-calories">
+                      {photo.calories} kcal
+                    </span>
+                    <button
+                      className="photo-delete-btn"
+                      onClick={() => handleDelete(photo.id)}
+                    >
+                      🗑️
+                    </button>
                   </div>
                 </div>
               ))}
@@ -139,12 +153,15 @@ const ImageModal = ({ isOpen, onClose, photos = [], onAddPhoto, onDeletePhoto, r
 
               {previewUrl && (
                 <div className="photo-preview">
+                  <button className="preview-remove-btn" onClick={clearPreview}>
+                    ✕
+                  </button>
                   <img src={previewUrl} alt="Preview" />
                 </div>
               )}
 
               <div className="photo-actions">
-                <button className="button secondary" onClick={handleCameraCapture}>
+                <button className="button secondary mobile-only" onClick={handleCameraCapture}>
                   📷 {t("takePhoto")}
                 </button>
                 <label className="button secondary">
@@ -160,20 +177,25 @@ const ImageModal = ({ isOpen, onClose, photos = [], onAddPhoto, onDeletePhoto, r
 
               <div className="photo-form">
                 <div className="form-group">
-                  <label>{t("caloriesAmount")}</label>
+                  <label>{t("caloriesAmount")} *</label>
                   <input
                     type="number"
                     value={newPhotoCalories}
                     onChange={(e) => setNewPhotoCalories(e.target.value)}
                     placeholder="0"
                     min="0"
+                    required
                   />
                 </div>
 
                 <button
                   className="button"
                   onClick={handleAddPhoto}
-                  disabled={!newPhotoUrl}
+                  disabled={
+                    !newPhotoUrl ||
+                    !newPhotoCalories ||
+                    parseInt(newPhotoCalories) <= 0
+                  }
                 >
                   {t("addPhoto")}
                 </button>

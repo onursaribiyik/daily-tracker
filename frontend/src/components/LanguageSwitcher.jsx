@@ -16,16 +16,18 @@ const LanguageSwitcher = () => {
         className={`lang-option ${currentLang === "tr" ? "active" : ""}`}
         onClick={() => changeLanguage("tr")}
       >
-        <span className="flag">🇹🇷</span>
-        <span className="lang-text">Türkçe</span>
+        <span className="lang-text">
+          {currentLang === "tr" ? "Türkçe" : "Turkish"}
+        </span>
         {currentLang === "tr" && <span className="check-icon">✓</span>}
       </button>
       <button
         className={`lang-option ${currentLang === "en" ? "active" : ""}`}
         onClick={() => changeLanguage("en")}
       >
-        <span className="flag">🇬🇧</span>
-        <span className="lang-text">English</span>
+        <span className="lang-text">
+          {currentLang === "en" ? "English" : "İngilizce"}
+        </span>
         {currentLang === "en" && <span className="check-icon">✓</span>}
       </button>
     </div>

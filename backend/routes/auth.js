@@ -27,6 +27,7 @@ router.post("/register", async (req, res) => {
       weight,
       height,
       age,
+      weightHistory: [{ weight, date: new Date() }],
     });
 
     await user.save();
@@ -49,6 +50,7 @@ router.post("/register", async (req, res) => {
         height: user.height,
         age: user.age,
         bmi: user.bmi,
+        weightHistory: user.weightHistory,
       },
     });
   } catch (error) {
@@ -76,6 +78,12 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    // Eğer weightHistory yoksa veya boşsa, mevcut kiloyu ekle
+    if (!user.weightHistory || user.weightHistory.length === 0) {
+      user.weightHistory = [{ weight: user.weight, date: new Date() }];
+      await user.save();
+    }
+
     // Generate JWT token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -94,6 +102,7 @@ router.post("/login", async (req, res) => {
         height: user.height,
         age: user.age,
         bmi: user.bmi,
+        weightHistory: user.weightHistory,
       },
     });
   } catch (error) {
@@ -105,6 +114,12 @@ router.post("/login", async (req, res) => {
 // Get user profile
 router.get("/profile", authenticateToken, async (req, res) => {
   try {
+    // Eğer weightHistory yoksa veya boşsa, mevcut kiloyu ekle
+    if (!req.user.weightHistory || req.user.weightHistory.length === 0) {
+      req.user.weightHistory = [{ weight: req.user.weight, date: new Date() }];
+      await req.user.save();
+    }
+
     res.json({
       id: req.user._id,
       username: req.user.username,
@@ -115,6 +130,7 @@ router.get("/profile", authenticateToken, async (req, res) => {
       height: req.user.height,
       age: req.user.age,
       bmi: req.user.bmi,
+      weightHistory: req.user.weightHistory,
     });
   } catch (error) {
     console.error("Profile error:", error);
@@ -132,11 +148,20 @@ router.put("/profile", authenticateToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Eğer weightHistory yoksa veya boşsa, mevcut kiloyu ekle
+    if (!user.weightHistory || user.weightHistory.length === 0) {
+      user.weightHistory = [{ weight: user.weight, date: new Date() }];
+    }
+
     // Update fields
     if (name) user.name = name;
     if (surname) user.surname = surname;
     if (gender) user.gender = gender;
-    if (weight) user.weight = weight;
+    if (weight && weight !== user.weight) {
+      // Kilo değiştiyse history'e ekle
+      user.weightHistory.push({ weight, date: new Date() });
+      user.weight = weight;
+    }
     if (height) user.height = height;
     if (age) user.age = age;
 
@@ -154,6 +179,7 @@ router.put("/profile", authenticateToken, async (req, res) => {
         height: user.height,
         age: user.age,
         bmi: user.bmi,
+        weightHistory: user.weightHistory,
       },
     });
   } catch (error) {
