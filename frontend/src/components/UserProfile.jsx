@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { updateUser, changePassword } from "../services/api";
 import LanguageSwitcher from "./LanguageSwitcher";
+import WeightHistoryModal from "./WeightHistoryModal";
 
 const UserProfile = ({ user, onUpdate, onLogout }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,6 +27,7 @@ const UserProfile = ({ user, onUpdate, onLogout }) => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [isWeightHistoryOpen, setIsWeightHistoryOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +59,8 @@ const UserProfile = ({ user, onUpdate, onLogout }) => {
 
       // Backend'de güncelle
       const updated = await updateUser(updatedUser);
+      console.log("Updated user response:", updated);
+      console.log("Weight history:", updated.user?.weightHistory);
       localStorage.setItem("currentUser", JSON.stringify(updated.user));
 
       onUpdate(updated.user);
@@ -285,7 +289,16 @@ const UserProfile = ({ user, onUpdate, onLogout }) => {
             <div className="info-grid">
               <div className="info-item">
                 <label>{t("weight")}:</label>
-                <span>{user.weight} kg</span>
+                <span className="weight-with-icon">
+                  {user.weight} kg
+                  <button 
+                    className="weight-history-icon"
+                    onClick={() => setIsWeightHistoryOpen(true)}
+                    title={t("viewWeightHistory")}
+                  >
+                    ⚖️
+                  </button>
+                </span>
               </div>
               <div className="info-item">
                 <label>{t("height")}:</label>
@@ -484,6 +497,12 @@ const UserProfile = ({ user, onUpdate, onLogout }) => {
           </div>
         </div>
       )}
+
+      <WeightHistoryModal 
+        isOpen={isWeightHistoryOpen}
+        onClose={() => setIsWeightHistoryOpen(false)}
+        weightHistory={user.weightHistory || []}
+      />
     </div>
   );
 };

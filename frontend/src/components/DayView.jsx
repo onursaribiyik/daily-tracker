@@ -5,7 +5,7 @@ import ActivitySection from "./ActivitySection";
 import ImageModal from "./ImageModal";
 import { addMealPhoto, deleteMealPhoto } from "../services/api";
 
-function getTotalCaloriesFromMeals(meals) {
+function getTotalCaloriesFromMeals(meals, mealPhotos) {
   let total = 0;
   Object.values(meals).forEach((arr) => {
     (arr || []).forEach((txt) => {
@@ -13,14 +13,26 @@ function getTotalCaloriesFromMeals(meals) {
       if (kcalMatch) total += parseInt(kcalMatch[1], 10);
     });
   });
+  // Fotoğraflardan gelen kalorileri ekle
+  if (mealPhotos) {
+    Object.values(mealPhotos).forEach((photos) => {
+      (photos || []).forEach((photo) => {
+        total += parseInt(photo.calories) || 0;
+      });
+    });
+  }
   return total;
 }
 
-function getMealCalories(mealItems) {
+function getMealCalories(mealItems, mealPhotos) {
   let total = 0;
   (mealItems || []).forEach((txt) => {
     const kcalMatch = txt.match(/(\d+)\s*kcal/i);
     if (kcalMatch) total += parseInt(kcalMatch[1], 10);
+  });
+  // Fotoğraflardan gelen kalorileri ekle
+  (mealPhotos || []).forEach((photo) => {
+    total += parseInt(photo.calories) || 0;
   });
   return total;
 }
@@ -34,18 +46,18 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
   const title = new Date(data.id + "T00:00:00").toLocaleDateString("tr-TR");
-  const mealCaloriesFromMeals = getTotalCaloriesFromMeals(data.meals);
+  const mealCaloriesFromMeals = getTotalCaloriesFromMeals(data.meals, data.mealPhotos);
   const showSaveButton = !compact && !readOnly;
   const mealTitles = {
-    sabah: `🌅 ${t("breakfast")} (${getMealCalories(data.meals?.sabah)} kcal)`,
+    sabah: `🌅 ${t("breakfast")} (${getMealCalories(data.meals?.sabah, data.mealPhotos?.sabah)} kcal)`,
     araOgun1: `🍎 ${t("snack")} 1 (${getMealCalories(
-      data.meals?.araOgun1
+      data.meals?.araOgun1, data.mealPhotos?.araOgun1
     )} kcal)`,
-    oglen: `🌞 ${t("lunch")} (${getMealCalories(data.meals?.oglen)} kcal)`,
+    oglen: `🌞 ${t("lunch")} (${getMealCalories(data.meals?.oglen, data.mealPhotos?.oglen)} kcal)`,
     araOgun2: `🍪 ${t("snack")} 2 (${getMealCalories(
-      data.meals?.araOgun2
+      data.meals?.araOgun2, data.mealPhotos?.araOgun2
     )} kcal)`,
-    aksam: `🌙 ${t("dinner")} (${getMealCalories(data.meals?.aksam)} kcal)`,
+    aksam: `🌙 ${t("dinner")} (${getMealCalories(data.meals?.aksam, data.mealPhotos?.aksam)} kcal)`,
   };
 
   useEffect(() => setData(day), [day]);
@@ -90,6 +102,8 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
     try {
       const updatedDay = await addMealPhoto(data.id, selectedMealForPhotos, photo);
       setData(updatedDay);
+      // App.jsx'teki days state'ini güncelle
+      await onSave(updatedDay);
     } catch (error) {
       console.error("Error adding photo:", error);
       alert(t("errorAddingPhoto"));
@@ -100,6 +114,8 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
     try {
       const updatedDay = await deleteMealPhoto(data.id, selectedMealForPhotos, photoId);
       setData(updatedDay);
+      // App.jsx'teki days state'ini güncelle
+      await onSave(updatedDay);
     } catch (error) {
       console.error("Error deleting photo:", error);
       alert(t("errorDeletingPhoto"));

@@ -138,6 +138,10 @@
     "overweight": "Fazla Kilolu",
     "obese": "Obez",
     "language": "Dil",
+    "TurkishTR": "Türkçe",
+    "TurkishEN": "Türkçe",
+    "EnglishTR": "İngilizce",
+    "EnglishEN": "English",
 
     "PAGINATION": "...",
     "showing": "Gösteriliyor",
@@ -154,6 +158,11 @@
     "noPhotosYet": "Henüz fotoğraf eklenmemiş",
     "confirmDeletePhoto": "Bu fotoğrafı silmek istediğinize emin misiniz?",
     "errorAddingPhoto": "Fotoğraf eklenirken hata oluştu!",
-    "errorDeletingPhoto": "Fotoğraf silinirken hata oluştu!"
+    "errorDeletingPhoto": "Fotoğraf silinirken hata oluştu!",
+
+    "WEIGHT_HISTORY": "...",
+    "weightHistory": "Kilo Geçmişi",
+    "viewWeightHistory": "Kilo Geçmişini Görüntüle",
+    "noWeightHistory": "Henüz kilo değişikliği kaydı yok"
   }
 }

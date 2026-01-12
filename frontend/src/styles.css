@@ -127,6 +127,20 @@ body {
   background: transparent;
   border: 1px solid #334155;
 }
+.button:disabled {
+  background: #374151;
+  color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.button.mobile-only {
+  display: flex;
+}
+@media (min-width: 768px) {
+  .button.mobile-only {
+    display: none;
+  }
+}
 .input,
 .textarea {
   width: 100%;
@@ -534,7 +548,7 @@ hr.sep {
 
 .menu-item-label {
   flex: 1;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -1556,13 +1570,18 @@ footer {
 }
 
 .lang-option.active {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.15) 0%,
+    rgba(37, 99, 235, 0.1) 100%
+  );
   border-color: #3b82f6;
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2), 0 4px 12px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2),
+    0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .lang-option.active::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -1614,11 +1633,11 @@ footer {
   .lang-option {
     padding: 16px 20px;
   }
-  
+
   .lang-option .flag {
     font-size: 32px;
   }
-  
+
   .lang-option .lang-text {
     font-size: 17px;
   }
@@ -2134,6 +2153,10 @@ footer {
 
 .day-header:hover {
   background-color: #1f2937; /* gray-800 */
+
+  .calories-summary {
+    background-color: #111827;
+  }
 }
 
 .expand-icon {
@@ -2220,19 +2243,6 @@ footer {
 .pagination-info {
   display: flex;
   justify-content: center;
-  margin-bottom: 12px;
-}
-
-@media (min-width: 480px) {
-  .pagination-info {
-    margin-bottom: 16px;
-  }
-}
-
-@media (min-width: 768px) {
-  .pagination-info {
-    margin-bottom: 20px;
-  }
 }
 
 .pagination-text {
@@ -2443,7 +2453,7 @@ footer {
 }
 
 .meal-header:hover {
-  background-color: #f1f5f9;
+  background-color: #1f2937;
 }
 
 .meal-title {
@@ -2475,7 +2485,7 @@ footer {
 }
 
 .compact-meal-header:hover {
-  background-color: #f1f5f9;
+  background-color: #1f2937;
 }
 
 .spacing-small {
@@ -3050,6 +3060,8 @@ footer {
 .photo-preview {
   margin: 16px 0;
   text-align: center;
+  position: relative;
+  display: inline-block;
 }
 
 .photo-preview img {
@@ -3057,6 +3069,31 @@ footer {
   max-height: 200px;
   border-radius: 8px;
   border: 2px solid #334155;
+}
+
+.preview-remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.preview-remove-btn:hover {
+  background: rgba(220, 38, 38, 1);
+  transform: scale(1.1);
 }
 
 .photo-actions {
@@ -3135,4 +3172,102 @@ footer {
   .photo-actions .button {
     width: 100%;
   }
+}
+
+/* Weight History Modal */
+.weight-history-modal {
+  max-width: 500px;
+}
+
+.weight-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weight-history-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px 8px;
+  transition: transform 0.2s;
+  border-radius: 6px;
+}
+
+.weight-history-icon:hover {
+  transform: scale(1.15);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.weight-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.weight-history-item {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 12px 16px;
+  transition: all 0.2s;
+}
+
+.weight-history-item:hover {
+  border-color: #334155;
+  transform: translateX(4px);
+}
+
+.weight-history-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.weight-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.weight-date {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.weight-change {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.weight-change.positive {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.weight-change.negative {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.weight-change.neutral {
+  background: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+}
+
+.no-history {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+}
+
+.no-history p {
+  font-size: 16px;
 }
