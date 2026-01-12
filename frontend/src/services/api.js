@@ -259,3 +259,66 @@ export const changePassword = async (oldPassword, newPassword) => {
 
   return r.json();
 };
+
+// Meal Photos API
+export const addMealPhoto = async (dayId, mealType, photo) => {
+  if (IS_DEMO_MODE) {
+    const storedDays = JSON.parse(localStorage.getItem("demo-days") || "[]");
+    const dayIndex = storedDays.findIndex((d) => d.id === dayId);
+    
+    if (dayIndex !== -1) {
+      if (!storedDays[dayIndex].mealPhotos) {
+        storedDays[dayIndex].mealPhotos = {};
+      }
+      if (!storedDays[dayIndex].mealPhotos[mealType]) {
+        storedDays[dayIndex].mealPhotos[mealType] = [];
+      }
+      storedDays[dayIndex].mealPhotos[mealType].push(photo);
+      localStorage.setItem("demo-days", JSON.stringify(storedDays));
+      return storedDays[dayIndex];
+    }
+    return null;
+  }
+
+  const r = await fetch(`${API_URL}/days/${dayId}/photos/${mealType}`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ photo }),
+  });
+
+  if (!r.ok) {
+    const errorData = await r.json();
+    throw new Error(errorData.message || "Add photo failed");
+  }
+
+  return r.json();
+};
+
+export const deleteMealPhoto = async (dayId, mealType, photoId) => {
+  if (IS_DEMO_MODE) {
+    const storedDays = JSON.parse(localStorage.getItem("demo-days") || "[]");
+    const dayIndex = storedDays.findIndex((d) => d.id === dayId);
+    
+    if (dayIndex !== -1 && storedDays[dayIndex].mealPhotos?.[mealType]) {
+      storedDays[dayIndex].mealPhotos[mealType] = storedDays[dayIndex].mealPhotos[mealType].filter(
+        (photo) => photo.id !== photoId
+      );
+      localStorage.setItem("demo-days", JSON.stringify(storedDays));
+      return storedDays[dayIndex];
+    }
+    return null;
+  }
+
+  const r = await fetch(`${API_URL}/days/${dayId}/photos/${mealType}/${photoId}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+
+  if (!r.ok) {
+    const errorData = await r.json();
+    throw new Error(errorData.message || "Delete photo failed");
+  }
+
+  return r.json();
+};
+

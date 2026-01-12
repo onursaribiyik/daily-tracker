@@ -143,6 +143,17 @@
     "showing": "Gösteriliyor",
     "days": "gün",
     "previous": "Önceki",
-    "next": "Sonraki"
+    "next": "Sonraki",
+
+    "MEAL_PHOTOS": "...",
+    "mealPhotos": "Öğün Fotoğrafları",
+    "addNewPhoto": "Yeni Fotoğraf Ekle",
+    "takePhoto": "Fotoğraf Çek",
+    "chooseFile": "Dosya Seç",
+    "addPhoto": "Fotoğraf Ekle",
+    "noPhotosYet": "Henüz fotoğraf eklenmemiş",
+    "confirmDeletePhoto": "Bu fotoğrafı silmek istediğinize emin misiniz?",
+    "errorAddingPhoto": "Fotoğraf eklenirken hata oluştu!",
+    "errorDeletingPhoto": "Fotoğraf silinirken hata oluştu!"
   }
 }

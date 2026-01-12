@@ -111,4 +111,81 @@ router.delete("/:dayId", authenticateToken, async (req, res) => {
   }
 });
 
+// Add photo to meal
+router.post("/:dayId/photos/:mealType", authenticateToken, async (req, res) => {
+  try {
+    const { dayId, mealType } = req.params;
+    const { photo } = req.body; // { id, url, calories }
+
+    const validMeals = ["sabah", "araOgun1", "oglen", "araOgun2", "aksam"];
+    if (!validMeals.includes(mealType)) {
+      return res.status(400).json({ message: "Invalid meal type" });
+    }
+
+    const day = await Day.findOne({
+      id: dayId,
+      userId: req.user._id,
+    });
+
+    if (!day) {
+      return res.status(404).json({ message: "Day not found" });
+    }
+
+    if (!day.mealPhotos) {
+      day.mealPhotos = {};
+    }
+    if (!day.mealPhotos[mealType]) {
+      day.mealPhotos[mealType] = [];
+    }
+
+    day.mealPhotos[mealType].push({
+      id: photo.id || Date.now().toString(),
+      url: photo.url,
+      calories: photo.calories || 0,
+      timestamp: new Date(),
+    });
+
+    await day.save();
+
+    res.json(day);
+  } catch (error) {
+    console.error("Add photo error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete photo from meal
+router.delete("/:dayId/photos/:mealType/:photoId", authenticateToken, async (req, res) => {
+  try {
+    const { dayId, mealType, photoId } = req.params;
+
+    const validMeals = ["sabah", "araOgun1", "oglen", "araOgun2", "aksam"];
+    if (!validMeals.includes(mealType)) {
+      return res.status(400).json({ message: "Invalid meal type" });
+    }
+
+    const day = await Day.findOne({
+      id: dayId,
+      userId: req.user._id,
+    });
+
+    if (!day) {
+      return res.status(404).json({ message: "Day not found" });
+    }
+
+    if (day.mealPhotos && day.mealPhotos[mealType]) {
+      day.mealPhotos[mealType] = day.mealPhotos[mealType].filter(
+        (photo) => photo.id !== photoId
+      );
+    }
+
+    await day.save();
+
+    res.json(day);
+  } catch (error) {
+    console.error("Delete photo error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;

@@ -143,6 +143,17 @@
     "showing": "Showing",
     "days": "days",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+
+    "MEAL_PHOTOS": "...",
+    "mealPhotos": "Meal Photos",
+    "addNewPhoto": "Add New Photo",
+    "takePhoto": "Take Photo",
+    "chooseFile": "Choose File",
+    "addPhoto": "Add Photo",
+    "noPhotosYet": "No photos added yet",
+    "confirmDeletePhoto": "Are you sure you want to delete this photo?",
+    "errorAddingPhoto": "Error adding photo!",
+    "errorDeletingPhoto": "Error deleting photo!"
   }
 }
