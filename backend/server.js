@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import dayRoutes from "./routes/days.js";
+import noteRoutes from "./routes/notes.js";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ mongoose
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/days", dayRoutes);
+app.use("/api/notes", noteRoutes);
 
 // Health check
 app.get("/", (req, res) => {
