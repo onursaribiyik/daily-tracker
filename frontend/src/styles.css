@@ -55,8 +55,17 @@
 }
 body {
   margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial,
-    Noto Sans, "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji";
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial,
+    Noto Sans,
+    "Helvetica Neue",
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
   background: #0f172a; /* slate-900 */
   color: #e2e8f0; /* slate-200 */
   font-size: 14px;
@@ -268,6 +277,7 @@ hr.sep {
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
 }
 
 @media (max-width: 480px) {
@@ -1576,7 +1586,8 @@ footer {
     rgba(37, 99, 235, 0.1) 100%
   );
   border-color: #3b82f6;
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2),
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.2),
     0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
@@ -2549,12 +2560,71 @@ footer {
 .water-controls {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
-.water-input {
-  width: 100px;
+.water-btn-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.water-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.15s;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.water-btn:active {
+  transform: scale(0.95);
+}
+
+.water-btn-glass {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+}
+
+.water-btn-glass:hover {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+  opacity: 0.92;
+}
+
+.water-btn-bottle {
+  background: linear-gradient(135deg, #34d399, #10b981);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+}
+
+.water-btn-bottle:hover {
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
+  opacity: 0.92;
+}
+
+.water-btn-reset {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1.5px solid rgba(239, 68, 68, 0.3);
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.water-btn-reset:hover {
+  background: rgba(239, 68, 68, 0.2);
 }
 
 .water-percentage {
@@ -3270,4 +3340,194 @@ footer {
 
 .no-history p {
   font-size: 16px;
+}
+
+/* ── Notes Page ─────────────────────────────────────────────────────────── */
+.notes-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 32px;
+}
+
+.notes-header-card {
+  padding: 14px 16px;
+}
+
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.notes-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.notes-sort-toggle {
+  display: flex;
+  border: 1.5px solid #334155;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.notes-sort-btn {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.notes-sort-btn.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.notes-sort-btn:hover:not(.active) {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+.notes-add-btn {
+  white-space: nowrap;
+}
+
+.notes-form-card {
+  padding: 16px;
+}
+
+.notes-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notes-title-input {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.notes-content-input {
+  background: #1e293b;
+  border: 1.5px solid #334155;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 14px;
+  padding: 10px 12px;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.notes-content-input:focus {
+  border-color: #2563eb;
+}
+
+.notes-form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.notes-empty {
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+  padding: 32px 16px;
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.note-card {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.note-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+  flex: 1;
+  word-break: break-word;
+}
+
+.note-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.note-action-btn {
+  background: transparent;
+  border: 1.5px solid #334155;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.note-edit-btn:hover {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: #2563eb;
+  color: #60a5fa;
+}
+
+.note-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: #ef4444;
+  color: #f87171;
+}
+
+.note-content {
+  color: #cbd5e1;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.note-meta {
+  font-size: 11px;
+  color: #475569;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.note-updated {
+  color: #475569;
 }

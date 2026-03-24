@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 const ActivitySection = ({
   waterIntake,
   onWaterChange,
+  savedWaterIntake = 0,
   stepCount,
   onStepChange,
   readOnly = false,
@@ -32,19 +33,31 @@ const ActivitySection = ({
 
         <div className="water-controls">
           {!readOnly ? (
-            <>
-              <input
-                type="number"
-                className="input water-input"
-                value={waterIntake || 0}
-                onChange={(e) => onWaterChange(e.target.value)}
-                min="0"
-                max="5000"
-                step="250"
-                placeholder="ml"
-              />
-              <span className="water-amount">ml</span>
-            </>
+            <div className="water-btn-group">
+              <button
+                className="water-btn water-btn-glass"
+                onClick={() => onWaterChange((waterIntake || 0) + 250)}
+                title="+250 ml"
+              >
+                🥛 {t("waterGlass")}
+              </button>
+              <button
+                className="water-btn water-btn-bottle"
+                onClick={() => onWaterChange((waterIntake || 0) + 1000)}
+                title="+1000 ml"
+              >
+                🍶 {t("waterBottle")}
+              </button>
+              {waterIntake !== savedWaterIntake && (
+                <button
+                  className="water-btn water-btn-reset"
+                  onClick={() => onWaterChange(savedWaterIntake)}
+                  title={t("waterReset")}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           ) : (
             <span>{waterIntake || 0} ml</span>
           )}

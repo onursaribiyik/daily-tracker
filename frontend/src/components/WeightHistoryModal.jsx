@@ -3,16 +3,14 @@ import { useTranslation } from "react-i18next";
 const WeightHistoryModal = ({ isOpen, onClose, weightHistory = [] }) => {
   const { t } = useTranslation();
 
-  console.log("WeightHistoryModal - weightHistory:", weightHistory);
-
   if (!isOpen) return null;
 
   // Fallback - eğer weightHistory undefined veya null ise boş array kullan
   const safeWeightHistory = Array.isArray(weightHistory) ? weightHistory : [];
 
   // Son kayıttan ilk kayda doğru sırala (en yeni en üstte)
-  const sortedHistory = [...safeWeightHistory].sort((a, b) => 
-    new Date(b.date) - new Date(a.date)
+  const sortedHistory = [...safeWeightHistory].sort(
+    (a, b) => new Date(b.date) - new Date(a.date),
   );
 
   const formatDate = (dateString) => {
@@ -36,7 +34,10 @@ const WeightHistoryModal = ({ isOpen, onClose, weightHistory = [] }) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content weight-history-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-content weight-history-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
           <h2>⚖️ {t("weightHistory")}</h2>
           <button className="modal-close" onClick={onClose}>
@@ -57,11 +58,16 @@ const WeightHistoryModal = ({ isOpen, onClose, weightHistory = [] }) => {
                   <div key={entry._id || index} className="weight-history-item">
                     <div className="weight-history-main">
                       <span className="weight-value">{entry.weight} kg</span>
-                      <span className="weight-date">{formatDate(entry.date)}</span>
+                      <span className="weight-date">
+                        {formatDate(entry.date)}
+                      </span>
                     </div>
                     {weightChange !== null && (
-                      <div className={`weight-change ${weightChange > 0 ? 'positive' : weightChange < 0 ? 'negative' : 'neutral'}`}>
-                        {weightChange > 0 ? '+' : ''}{weightChange.toFixed(1)} kg
+                      <div
+                        className={`weight-change ${weightChange > 0 ? "positive" : weightChange < 0 ? "negative" : "neutral"}`}
+                      >
+                        {weightChange > 0 ? "+" : ""}
+                        {weightChange.toFixed(1)} kg
                       </div>
                     )}
                   </div>

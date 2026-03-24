@@ -11,6 +11,7 @@ const Tabs = () => {
   const tabs = [
     { key: "today", label: t("today"), path: "/today", icon: "📅" },
     { key: "all", label: t("allDays"), path: "/allDay", icon: "📋" },
+    { key: "notes", label: t("myNotes"), path: "/notes", icon: "📝" },
     { key: "calories", label: t("caloriesInfo"), path: "/calories", icon: "🔥" },
     { key: "recipes", label: t("recipes"), path: "/recipes", icon: "📖" },
     { key: "user", label: t("user"), path: "/user", icon: "👤" },

@@ -59,8 +59,6 @@ const UserProfile = ({ user, onUpdate, onLogout }) => {
 
       // Backend'de güncelle
       const updated = await updateUser(updatedUser);
-      console.log("Updated user response:", updated);
-      console.log("Weight history:", updated.user?.weightHistory);
       localStorage.setItem("currentUser", JSON.stringify(updated.user));
 
       onUpdate(updated.user);

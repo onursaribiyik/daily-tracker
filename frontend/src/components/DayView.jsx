@@ -41,6 +41,7 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
   const { t } = useTranslation();
   const [data, setData] = useState(day);
   const [saving, setSaving] = useState(false);
+  const [savedWaterIntake, setSavedWaterIntake] = useState(day.waterIntake || 0);
   const [openMeal, setOpenMeal] = useState(null);
   const [selectedMealForPhotos, setSelectedMealForPhotos] = useState(null);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
@@ -85,6 +86,7 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
   const save = async () => {
     setSaving(true);
     await onSave(data);
+    setSavedWaterIntake(data.waterIntake || 0);
     setSaving(false);
   };
 
@@ -179,6 +181,7 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
           onChange={setActivities}
           waterIntake={data.waterIntake}
           onWaterChange={setWaterIntake}
+          savedWaterIntake={savedWaterIntake}
           stepCount={data.stepCount}
           onStepChange={setStepCount}
           readOnly={readOnly}
@@ -255,6 +258,7 @@ const DayView = ({ day, onSave, compact = false, readOnly = false }) => {
         onChange={setActivities}
         waterIntake={data.waterIntake}
         onWaterChange={setWaterIntake}
+        savedWaterIntake={savedWaterIntake}
         stepCount={data.stepCount}
         onStepChange={setStepCount}
         readOnly={readOnly}
