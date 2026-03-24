@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { emptyDay, getTotalCaloriesFromMeals, isoToday } from "./utils/helpers";
@@ -22,7 +23,7 @@ import DayView from "./components/DayView";
 import AuthForm from "./components/AuthForm";
 import UserProfile from "./components/UserProfile";
 import CaloriesInfo from "./components/CaloriesInfo";
-import LanguageSwitcher from "./components/LanguageSwitcher";
+import Notes from "./components/Notes";
 
 const MainApp = () => {
   const { t } = useTranslation();
@@ -37,7 +38,7 @@ const MainApp = () => {
   const [expandedDays, setExpandedDays] = useState({});
 
   const today = days.find((d) => d.id === todayId);
-  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkStoredAuth = async () => {
@@ -164,8 +165,12 @@ const MainApp = () => {
   return (
     <>
       <div className="row app-header">
-        <div className="row app-header-left">
-          <img src="/daily-tracker-favicon.png" alt="Daily Tracker" className="app-header-logo" />
+        <div className="row app-header-left" onClick={() => navigate("/today")}>
+          <img
+            src="/daily-tracker-favicon.png"
+            alt="Daily Tracker"
+            className="app-header-logo"
+          />
           <div className="title">{t("appTitle")}</div>
         </div>
         <Tabs />
@@ -217,7 +222,7 @@ const MainApp = () => {
                       {currentDays.map((day) => {
                         const isExpanded = expandedDays[day.id];
                         const dayTitle = new Date(
-                          day.id + "T00:00:00"
+                          day.id + "T00:00:00",
                         ).toLocaleDateString("tr-TR");
 
                         return (
@@ -240,7 +245,11 @@ const MainApp = () => {
                                 <div className="row pagination-controls">
                                   <div className="title">{dayTitle}</div>
                                   <span className="calories-summary">
-                                    🍖 {getTotalCaloriesFromMeals(day.meals, day.mealPhotos)}{" "}
+                                    🍖{" "}
+                                    {getTotalCaloriesFromMeals(
+                                      day.meals,
+                                      day.mealPhotos,
+                                    )}{" "}
                                     kcal
                                   </span>
                                 </div>
@@ -283,7 +292,7 @@ const MainApp = () => {
                         <div className="pagination-numbers">
                           {Array.from(
                             { length: totalPages },
-                            (_, i) => i + 1
+                            (_, i) => i + 1,
                           ).map((page) => (
                             <button
                               key={page}
@@ -301,7 +310,7 @@ const MainApp = () => {
                           className="pagination-btn"
                           onClick={() =>
                             setCurrentPage((prev) =>
-                              Math.min(prev + 1, totalPages)
+                              Math.min(prev + 1, totalPages),
                             )
                           }
                           disabled={currentPage === totalPages}
@@ -318,6 +327,8 @@ const MainApp = () => {
         />
 
         <Route path="/calories" element={<CaloriesInfo />} />
+
+        <Route path="/notes" element={<Notes />} />
 
         <Route path="/recipes" element={<Recipes />} />
 

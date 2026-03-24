@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const IS_DEMO_MODE = API_URL.includes("localhost");
 let authToken = localStorage.getItem("authToken");
 
-console.log("IS_DEMO_MODE:", IS_DEMO_MODE);
+if (IS_DEMO_MODE) console.log("IS_DEMO_MODE:", IS_DEMO_MODE);
 
 export const setAuthToken = (token) => {
   authToken = token;
@@ -265,7 +265,7 @@ export const addMealPhoto = async (dayId, mealType, photo) => {
   if (IS_DEMO_MODE) {
     const storedDays = JSON.parse(localStorage.getItem("demo-days") || "[]");
     const dayIndex = storedDays.findIndex((d) => d.id === dayId);
-    
+
     if (dayIndex !== -1) {
       if (!storedDays[dayIndex].mealPhotos) {
         storedDays[dayIndex].mealPhotos = {};
@@ -298,21 +298,24 @@ export const deleteMealPhoto = async (dayId, mealType, photoId) => {
   if (IS_DEMO_MODE) {
     const storedDays = JSON.parse(localStorage.getItem("demo-days") || "[]");
     const dayIndex = storedDays.findIndex((d) => d.id === dayId);
-    
+
     if (dayIndex !== -1 && storedDays[dayIndex].mealPhotos?.[mealType]) {
-      storedDays[dayIndex].mealPhotos[mealType] = storedDays[dayIndex].mealPhotos[mealType].filter(
-        (photo) => photo.id !== photoId
-      );
+      storedDays[dayIndex].mealPhotos[mealType] = storedDays[
+        dayIndex
+      ].mealPhotos[mealType].filter((photo) => photo.id !== photoId);
       localStorage.setItem("demo-days", JSON.stringify(storedDays));
       return storedDays[dayIndex];
     }
     return null;
   }
 
-  const r = await fetch(`${API_URL}/days/${dayId}/photos/${mealType}/${photoId}`, {
-    method: "DELETE",
-    headers: getAuthHeaders(),
-  });
+  const r = await fetch(
+    `${API_URL}/days/${dayId}/photos/${mealType}/${photoId}`,
+    {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    },
+  );
 
   if (!r.ok) {
     const errorData = await r.json();
@@ -322,3 +325,64 @@ export const deleteMealPhoto = async (dayId, mealType, photoId) => {
   return r.json();
 };
 
+// ── Notes ──────────────────────────────────────────────────────────────────
+
+export const getNotes = async () => {
+  if (IS_DEMO_MODE) {
+    return JSON.parse(localStorage.getItem("demo-notes") || "[]");
+  }
+  const r = await fetch(`${API_URL}/notes`, { headers: getAuthHeaders() });
+  if (!r.ok) throw new Error("Get notes failed");
+  return r.json();
+};
+
+export const createNote = async (title, content) => {
+  if (IS_DEMO_MODE) {
+    const notes = JSON.parse(localStorage.getItem("demo-notes") || "[]");
+    const note = { _id: Date.now().toString(), title, content, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+    notes.unshift(note);
+    localStorage.setItem("demo-notes", JSON.stringify(notes));
+    return note;
+  }
+  const r = await fetch(`${API_URL}/notes`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ title, content }),
+  });
+  if (!r.ok) throw new Error("Create note failed");
+  return r.json();
+};
+
+export const updateNote = async (id, title, content) => {
+  if (IS_DEMO_MODE) {
+    const notes = JSON.parse(localStorage.getItem("demo-notes") || "[]");
+    const idx = notes.findIndex((n) => n._id === id);
+    if (idx !== -1) {
+      notes[idx] = { ...notes[idx], title, content, updatedAt: new Date().toISOString() };
+      localStorage.setItem("demo-notes", JSON.stringify(notes));
+      return notes[idx];
+    }
+    return null;
+  }
+  const r = await fetch(`${API_URL}/notes/${id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ title, content }),
+  });
+  if (!r.ok) throw new Error("Update note failed");
+  return r.json();
+};
+
+export const deleteNote = async (id) => {
+  if (IS_DEMO_MODE) {
+    const notes = JSON.parse(localStorage.getItem("demo-notes") || "[]");
+    const filtered = notes.filter((n) => n._id !== id);
+    localStorage.setItem("demo-notes", JSON.stringify(filtered));
+    return;
+  }
+  const r = await fetch(`${API_URL}/notes/${id}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+  if (!r.ok) throw new Error("Delete note failed");
+};
