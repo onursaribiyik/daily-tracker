@@ -54,7 +54,7 @@ const AuthForm = ({ onAuth }) => {
           name: formData.name,
           surname: formData.surname,
           gender: formData.gender,
-          weight: parseInt(formData.weight),
+          weight: parseFloat(formData.weight.replace(',', '.')),
           height: parseInt(formData.height),
           age: parseInt(formData.age),
         };
@@ -88,10 +88,28 @@ const AuthForm = ({ onAuth }) => {
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    
+    // Kilo alanı için sadece sayı, virgül ve nokta kabul et
+    if (name === 'weight') {
+      // Sadece rakam, virgül ve nokta karakterlerine izin ver
+      const filteredValue = value.replace(/[^0-9.,]/g, '');
+      // Birden fazla virgül veya nokta varsa sadece ilkini tut
+      const parts = filteredValue.split(/[.,]/);
+      const finalValue = parts.length > 1 
+        ? parts[0] + (value.includes(',') ? ',' : '.') + parts.slice(1).join('')
+        : filteredValue;
+      
+      setFormData({
+        ...formData,
+        [name]: finalValue,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   return (
@@ -202,10 +220,13 @@ const AuthForm = ({ onAuth }) => {
               <div className="form-group">
                 <label>{t("weight")}</label>
                 <input
-                  type="number"
+                  type="text"
                   name="weight"
                   value={formData.weight}
                   onChange={handleChange}
+                  placeholder="88,60"
+                  pattern="[0-9]+([.,][0-9]{1,2})?"
+                  title="Örnek: 88,60 veya 88.60"
                   required
                 />
               </div>
