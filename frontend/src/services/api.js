@@ -4,6 +4,7 @@ import { createDemoDay } from "../utils/helpers";
 const API_URL = import.meta.env.VITE_API_URL;
 const IS_DEMO_MODE = API_URL.includes("localhost");
 let authToken = localStorage.getItem("authToken");
+let onTokenExpired = null;
 
 if (IS_DEMO_MODE) console.log("IS_DEMO_MODE:", IS_DEMO_MODE);
 
@@ -20,12 +21,35 @@ export const getAuthToken = () => {
   return authToken;
 };
 
+export const setTokenExpiredCallback = (callback) => {
+  onTokenExpired = callback;
+};
+
+const handleTokenExpired = () => {
+  if (onTokenExpired) {
+    onTokenExpired();
+  }
+};
+
 const getAuthHeaders = () => {
   const headers = { "Content-Type": "application/json" };
   if (authToken) {
     headers.Authorization = `Bearer ${authToken}`;
   }
   return headers;
+};
+
+// Fetch wrapper to handle token expiration
+const fetchWithAuth = async (url, options = {}) => {
+  const response = await fetch(url, options);
+  
+  // Check for token expiration
+  if (response.status === 401) {
+    handleTokenExpired();
+    throw new Error("Token expired. Please login again.");
+  }
+  
+  return response;
 };
 
 export const getDays = async () => {
@@ -44,7 +68,7 @@ export const getDays = async () => {
     return demoDays;
   }
 
-  const r = await fetch(`${API_URL}/days?_t=${Date.now()}`, {
+  const r = await fetchWithAuth(`${API_URL}/days?_t=${Date.now()}`, {
     headers: getAuthHeaders(),
   });
 
@@ -67,7 +91,7 @@ export const getDay = async (id) => {
   }
 
   try {
-    const r = await fetch(`${API_URL}/days/${id}`, {
+    const r = await fetchWithAuth(`${API_URL}/days/${id}`, {
       headers: getAuthHeaders(),
     });
     if (r.status === 404) return null;
@@ -95,7 +119,7 @@ export const createDay = async (day) => {
     return newDay;
   }
 
-  const r = await fetch(`${API_URL}/days`, {
+  const r = await fetchWithAuth(`${API_URL}/days`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(day),
@@ -121,7 +145,7 @@ export const updateDay = async (id, day) => {
     return day;
   }
 
-  const r = await fetch(`${API_URL}/days/${id}`, {
+  const r = await fetchWithAuth(`${API_URL}/days/${id}`, {
     method: "PUT",
     headers: getAuthHeaders(),
     body: JSON.stringify(day),
@@ -208,10 +232,15 @@ export const getUserProfile = async () => {
     return demoUser;
   }
 
-  const r = await fetch(`${API_URL}/auth/profile`, {
+  const r = await fetchWithAuth(`${API_URL}/auth/profile`, {
     headers: getAuthHeaders(),
   });
-  if (r.status === 401) return null;
+  
+  if (!r.ok) {
+    const errorData = await r.json();
+    throw new Error(errorData.message || "Get profile failed");
+  }
+  
   return r.json();
 };
 
@@ -226,7 +255,7 @@ export const updateUser = async (userData) => {
     return { user: updatedUser };
   }
 
-  const r = await fetch(`${API_URL}/auth/profile`, {
+  const r = await fetchWithAuth(`${API_URL}/auth/profile`, {
     method: "PUT",
     headers: getAuthHeaders(),
     body: JSON.stringify(userData),
@@ -246,7 +275,7 @@ export const changePassword = async (oldPassword, newPassword) => {
     return { message: "Password changed successfully" };
   }
 
-  const r = await fetch(`${API_URL}/auth/change-password`, {
+  const r = await fetchWithAuth(`${API_URL}/auth/change-password`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify({ oldPassword, newPassword }),
@@ -280,7 +309,7 @@ export const addMealPhoto = async (dayId, mealType, photo) => {
     return null;
   }
 
-  const r = await fetch(`${API_URL}/days/${dayId}/photos/${mealType}`, {
+  const r = await fetchWithAuth(`${API_URL}/days/${dayId}/photos/${mealType}`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify({ photo }),
@@ -309,7 +338,7 @@ export const deleteMealPhoto = async (dayId, mealType, photoId) => {
     return null;
   }
 
-  const r = await fetch(
+  const r = await fetchWithAuth(
     `${API_URL}/days/${dayId}/photos/${mealType}/${photoId}`,
     {
       method: "DELETE",
@@ -331,7 +360,7 @@ export const getNotes = async () => {
   if (IS_DEMO_MODE) {
     return JSON.parse(localStorage.getItem("demo-notes") || "[]");
   }
-  const r = await fetch(`${API_URL}/notes`, { headers: getAuthHeaders() });
+  const r = await fetchWithAuth(`${API_URL}/notes`, { headers: getAuthHeaders() });
   if (!r.ok) throw new Error("Get notes failed");
   return r.json();
 };
@@ -344,7 +373,7 @@ export const createNote = async (title, content) => {
     localStorage.setItem("demo-notes", JSON.stringify(notes));
     return note;
   }
-  const r = await fetch(`${API_URL}/notes`, {
+  const r = await fetchWithAuth(`${API_URL}/notes`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify({ title, content }),
@@ -364,7 +393,7 @@ export const updateNote = async (id, title, content) => {
     }
     return null;
   }
-  const r = await fetch(`${API_URL}/notes/${id}`, {
+  const r = await fetchWithAuth(`${API_URL}/notes/${id}`, {
     method: "PUT",
     headers: getAuthHeaders(),
     body: JSON.stringify({ title, content }),
@@ -380,7 +409,7 @@ export const deleteNote = async (id) => {
     localStorage.setItem("demo-notes", JSON.stringify(filtered));
     return;
   }
-  const r = await fetch(`${API_URL}/notes/${id}`, {
+  const r = await fetchWithAuth(`${API_URL}/notes/${id}`, {
     method: "DELETE",
     headers: getAuthHeaders(),
   });
