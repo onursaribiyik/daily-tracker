@@ -15,6 +15,7 @@ import {
   upsertDay,
   setAuthToken,
   getUserProfile,
+  setTokenExpiredCallback,
 } from "./services/api";
 
 import Tabs from "./components/Tabs";
@@ -39,6 +40,13 @@ const MainApp = () => {
 
   const today = days.find((d) => d.id === todayId);
   const navigate = useNavigate();
+
+  // Token expired callback'ini ayarla
+  useEffect(() => {
+    setTokenExpiredCallback(() => {
+      handleLogout();
+    });
+  }, []);
 
   useEffect(() => {
     const checkStoredAuth = async () => {
@@ -290,20 +298,65 @@ const MainApp = () => {
                         </button>
 
                         <div className="pagination-numbers">
-                          {Array.from(
-                            { length: totalPages },
-                            (_, i) => i + 1,
-                          ).map((page) => (
-                            <button
-                              key={page}
-                              className={`pagination-number ${
-                                currentPage === page ? "active" : ""
-                              }`}
-                              onClick={() => setCurrentPage(page)}
-                            >
-                              {page}
-                            </button>
-                          ))}
+                          {(() => {
+                            const pages = [];
+                            const maxVisible = 5; // Gösterilecek maksimum sayfa sayısı
+                            
+                            if (totalPages <= maxVisible + 2) {
+                              // Tüm sayfaları göster
+                              for (let i = 1; i <= totalPages; i++) {
+                                pages.push(i);
+                              }
+                            } else {
+                              // Akıllı pagination
+                              if (currentPage <= 3) {
+                                // Başlangıç: 1 2 3 4 5 ... son
+                                for (let i = 1; i <= maxVisible; i++) {
+                                  pages.push(i);
+                                }
+                                pages.push('...');
+                                pages.push(totalPages);
+                              } else if (currentPage >= totalPages - 2) {
+                                // Son: 1 ... son-4 son-3 son-2 son-1 son
+                                pages.push(1);
+                                pages.push('...');
+                                for (let i = totalPages - (maxVisible - 1); i <= totalPages; i++) {
+                                  pages.push(i);
+                                }
+                              } else {
+                                // Orta: 1 ... mevcut-1 mevcut mevcut+1 ... son
+                                pages.push(1);
+                                pages.push('...');
+                                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                                  pages.push(i);
+                                }
+                                pages.push('...');
+                                pages.push(totalPages);
+                              }
+                            }
+                            
+                            return pages.map((page, index) => {
+                              if (page === '...') {
+                                return (
+                                  <span key={`ellipsis-${index}`} className="pagination-ellipsis">
+                                    ...
+                                  </span>
+                                );
+                              }
+                              
+                              return (
+                                <button
+                                  key={page}
+                                  className={`pagination-number ${
+                                    currentPage === page ? "active" : ""
+                                  }`}
+                                  onClick={() => setCurrentPage(page)}
+                                >
+                                  {page}
+                                </button>
+                              );
+                            });
+                          })()}
                         </div>
 
                         <button

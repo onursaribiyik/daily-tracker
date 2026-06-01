@@ -57,7 +57,7 @@ const WeightHistoryModal = ({ isOpen, onClose, weightHistory = [] }) => {
                 return (
                   <div key={entry._id || index} className="weight-history-item">
                     <div className="weight-history-main">
-                      <span className="weight-value">{entry.weight} kg</span>
+                      <span className="weight-value">{typeof entry.weight === 'number' ? entry.weight.toFixed(2).replace('.', ',') : entry.weight} kg</span>
                       <span className="weight-date">
                         {formatDate(entry.date)}
                       </span>
@@ -67,7 +67,7 @@ const WeightHistoryModal = ({ isOpen, onClose, weightHistory = [] }) => {
                         className={`weight-change ${weightChange > 0 ? "positive" : weightChange < 0 ? "negative" : "neutral"}`}
                       >
                         {weightChange > 0 ? "+" : ""}
-                        {weightChange.toFixed(1)} kg
+                        {weightChange.toFixed(2).replace('.', ',')} kg
                       </div>
                     )}
                   </div>
